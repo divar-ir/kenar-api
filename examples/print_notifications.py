@@ -1,3 +1,5 @@
+import os
+
 from gunicorn.app.base import Application
 
 from kenar.bot import Bot
@@ -5,8 +7,9 @@ from kenar.botmessage import BotMessage
 from kenar.handler import ChatNotificationHandler, ChatMessagePayload
 from kenar.markup import Markup
 
-api_key = "api-key"
-identification_key = "identification-key"
+api_key = os.environ.get("KENAR_API_KEY")
+identification_key = os.environ.get("KENAR_IDENT_KEY")
+
 bot = Bot(api_key, identification_key)
 
 

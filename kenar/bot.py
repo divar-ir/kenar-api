@@ -12,6 +12,11 @@ from kenar.handler import Handler, Notification
 
 class Bot:
     def __init__(self, api_key: str, identification_key: str = ""):
+        if not api_key:
+            raise ValueError("please provide api-key")
+        if not identification_key:
+            raise ValueError("please provide identification key")
+
         self._api_key: str = api_key
         self._identification_key: str = identification_key
         self._handlers: List[Handler] = []
