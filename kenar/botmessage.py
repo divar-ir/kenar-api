@@ -15,6 +15,6 @@ class BotMessage:
         }
 
         if self._markups:
-            r["buttons"] = map(lambda mk: mk.pack(), self._markups)
+            r["buttons"] = list(map(lambda mk: mk.pack(), self._markups))
 
         return r

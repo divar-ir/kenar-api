@@ -32,9 +32,10 @@ class Bot:
         data = message.pack()
         data["user_id"] = user_id
 
+        s = json.dumps(data)
         resp = self._client.post(
             url="https://api.divar.ir/v1/open-platform/bot/send-message",
-            data=data,
+            content=s,
         )
 
         if resp.status_code != httpx.codes.OK:
