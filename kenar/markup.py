@@ -2,15 +2,15 @@ from typing import Dict
 
 
 class Markup:
-    def __init__(self, label: str, params: Dict[str, str]):
+    def __init__(self, label: str, link: str):
         self._label = label
-        self._params = params
+        self._link = link
 
     def pack(self):
         return {
-            "action": "LINK",
+            "action": "DIRECT_LINK",
             "data": {
                 "caption": self._label,
-                "extra_data": self._params,
+                "direct_link": self._link,
             }
         }

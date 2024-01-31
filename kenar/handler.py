@@ -50,7 +50,8 @@ class ChatNotificationHandler(Handler):
     def handle(self, notification: Notification):
         match notification.type:
             case "CHAT_MESSAGE":
-                self.handle_chat_message(notification.timestamp, notification.payload)
+                if not notification.payload.sender.is_supply:
+                    self.handle_chat_message(notification.timestamp, notification.payload)
 
     @abc.abstractmethod
     def handle_chat_message(self, timestamp: int, payload: ChatMessagePayload):

@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import Optional, List
 
 import httpx
@@ -8,6 +9,8 @@ from kenar.conversation import Conversation
 from kenar.errors import IdentificationKeyError, SendBotMessageError
 from kenar.botmessage import BotMessage
 from kenar.handler import Handler, Notification
+
+logger = logging.getLogger(__name__)
 
 
 class Bot:
@@ -72,6 +75,8 @@ class Bot:
         body: Optional[Body] = environ.get("wsgi.input")
         if not body:
             return
+
+        logger.info("notification received", extra={"contents": body})
 
         contents = json.load(body)
         notification = Notification.parse_obj(contents)

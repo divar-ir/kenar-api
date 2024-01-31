@@ -15,8 +15,10 @@ bot = Bot(api_key, identification_key)
 
 class PrintChatNotificationHandler(ChatNotificationHandler):
     def handle_chat_message(self, timestamp: int, payload: ChatMessagePayload):
-        print(payload)
-        self.bot.send_bot_message(payload.sender.id, BotMessage(payload.data.text, markups=[Markup("salam", {})]))
+        self.bot.send_bot_message(
+            payload.sender.id,
+            BotMessage(payload.data.text, markups=[Markup("salam", "https://team9.hackathon.divar.codes/landing")]),
+        )
 
 
 bot.add_handler(PrintChatNotificationHandler())
