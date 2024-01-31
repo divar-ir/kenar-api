@@ -35,6 +35,11 @@ class Notification(BaseModel):
 
 
 class Handler(abc.ABC):
+    def __init__(self):
+        self.bot = None
+
+    def register(self, bot):
+        self.bot = bot
 
     @abc.abstractmethod
     def handle(self, notification: Notification):

@@ -26,6 +26,7 @@ class Bot:
             raise IdentificationKeyError("identification key required")
 
         self._handlers.append(handler)
+        handler.register(self)
 
     def send_bot_message(self, user_id: str, message: BotMessage):
         data = message.pack()
