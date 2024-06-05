@@ -8,7 +8,7 @@ from gunicorn.http.body import Body
 from kenar.conversation import Conversation
 from kenar.errors import IdentificationKeyError, SendBotMessageError
 from kenar.botmessage import BotMessage
-from kenar.handler import Handler, Notification
+from kenar.handlers.handler import Handler, Notification
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ class Bot:
     def send_message(self, conversation: Conversation, message: BotMessage):
         raise NotImplemented
 
-    def attach_addon(self, post_token: str, addon):
+    def attach_post_addon(self, post_token: str, post_addon):
         raise NotImplemented
 
     def attach_user_addon(self, phone_number: str, user_addon):
@@ -81,6 +81,7 @@ class Bot:
         contents = json.load(body)
         notification = Notification.parse_obj(contents)
 
+        # unimplemented will raise
         for hnd in self._handlers:
             hnd.handle(notification)
 

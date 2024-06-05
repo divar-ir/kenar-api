@@ -5,7 +5,7 @@ from gunicorn.app.base import Application
 
 from kenar.bot import Bot
 from kenar.botmessage import BotMessage
-from kenar.handler import ChatNotificationHandler, ChatMessagePayload
+from kenar.handlers.handler import ChatNotificationHandler, ChatMessagePayload
 from kenar.markup import Markup
 
 logging.basicConfig(level=logging.INFO)
@@ -13,6 +13,8 @@ logging.basicConfig(level=logging.INFO)
 api_key = os.environ.get("KENAR_API_KEY")
 identification_key = os.environ.get("KENAR_IDENT_KEY")
 
+# get host name
+# future: generate random key for notification registration
 bot = Bot(api_key, identification_key)
 
 
@@ -28,6 +30,7 @@ bot.add_handler(PrintChatNotificationHandler())
 
 
 def main():
+    # TODO: Move to bot
     class WSGIServer(Application):
         def init(self, parser, opts, args):
             pass

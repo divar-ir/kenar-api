@@ -1,6 +1,3 @@
-from typing import Dict
-
-
 class Markup:
     def __init__(self, label: str, link: str):
         self._label = label

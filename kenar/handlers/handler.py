@@ -45,14 +45,26 @@ class Handler(abc.ABC):
     def handle(self, notification: Notification):
         raise NotImplemented
 
+    @abc.abstractmethod
+    def handle_create_post_addon(self, payload):
+        # TODO: type safe
+        raise NotImplemented
+
 
 class ChatNotificationHandler(Handler):
     def handle(self, notification: Notification):
         match notification.type:
             case "CHAT_MESSAGE":
+                # TODO: remove
                 if not notification.payload.sender.is_supply:
                     self.handle_chat_message(notification.timestamp, notification.payload)
 
     @abc.abstractmethod
     def handle_chat_message(self, timestamp: int, payload: ChatMessagePayload):
+        raise NotImplemented
+
+
+class PostAddonCreationNotificationHandler(Notification):
+    @abc.abstractmethod
+    def handle_create_post_addon(self, payload):
         raise NotImplemented
