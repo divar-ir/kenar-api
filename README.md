@@ -16,7 +16,7 @@
 <div dir="ltr">
 
 ```bash
-pip install divar-kenar
+pip install Kenar
 ```
 </div>
 

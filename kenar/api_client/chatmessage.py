@@ -1,10 +1,9 @@
 from enum import Enum
+from typing import Dict
 
-import httpx
 from pydantic import BaseModel
 
-from kenar.api_client.request import mask_secret, _request
-from kenar.errors import HTTPException, APIException
+from kenar.api_client.request import _request
 
 
 class BotButton(BaseModel):
@@ -14,7 +13,7 @@ class BotButton(BaseModel):
 
     class ButtonData(BaseModel):
         icon_name: str
-        extra_data: dict= {}
+        extra_data: dict = {}
         caption: str
         direct_link: str
 
@@ -28,6 +27,10 @@ class SetNotifyChatPostConversationsRequest(BaseModel):
     identification_key: str
 
 
+class SetNotifyChatPostConversationsResponse(BaseModel):
+    pass
+
+
 class SendMessageV2Request(BaseModel):
     user_id: str
     peer_id: str
@@ -38,11 +41,18 @@ class SendMessageV2Request(BaseModel):
     receiver_btn: BotButton
 
 
-def set_notify_chat_post_conversations(client: httpx.Client, data: SetNotifyChatPostConversationsRequest):
-    return _request(client=client, url='https://api.divar.ir/v1/open-platform/notify/chat/post-conversations',
-                    data=data, method='POST')
+class SendMessageV2Response(BaseModel):
+    status: int
+    message: str
 
 
-def send_message(client: httpx.Client, data: SendMessageV2Request):
-    return _request(client=client, url='https://api.divar.ir/v2/open-platform/chat/conversation',
-                    data=data, method='POST')
+def set_notify_chat_post_conversations(data: SetNotifyChatPostConversationsRequest,
+                                       headers: Dict) -> SetNotifyChatPostConversationsResponse:
+    _request(path='/v1/open-platform/notify/chat/post-conversations',
+             data=data, method='POST', headers=headers)
+    return SetNotifyChatPostConversationsResponse()
+
+
+def send_message(data: SendMessageV2Request, headers: Dict) -> SendMessageV2Response:
+    return SendMessageV2Response(**_request(path='/v2/open-platform/chat/conversation',
+                                            data=data, method='POST', headers=headers).json())

@@ -1,9 +1,9 @@
 from kenar.api_client.addon import CreatePostAddonRequest, Widgets, Widget, CreateUserAddonRequest, \
     GetPostAddonsRequest, DeletePostAddonRequest, GetUserAddonsRequest, DeleteUserAddonRequest
-from samples.sample_bot import bot
+from samples.sample_app import app
 
 if __name__ == '__main__':
-    resp = bot.addon.create_post_addon(
+    resp = app.addon.create_post_addon(
         access_token='ACCESS_TOKEN_HERE',
         data=CreatePostAddonRequest(
             token='gZW5uQcs',
@@ -28,15 +28,17 @@ if __name__ == '__main__':
             })]),
         ),
     )
-    print(resp.json())
+    print(resp)
+    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token='gZW5uQcs'))
+    print(resp)
 
-    resp = bot.addon.delete_post_addon(data=DeletePostAddonRequest(token='gZW5uQcs'))
-    print(resp.json())
+    resp = app.addon.delete_post_addon(data=DeletePostAddonRequest(token='gZW5uQcs'))
+    print(resp)
 
-    resp = bot.addon.get_post_addons(data=GetPostAddonsRequest(token='gZW5uQcs'))
-    print(resp.json())
+    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token='gZW5uQcs'))
+    print(resp)
 
-    resp = bot.addon.create_user_addon(
+    resp = app.addon.create_user_addon(
         access_token='ACCESS_TOKEN_HERE',
         data=CreateUserAddonRequest(
             phone='09035718581',
@@ -63,14 +65,14 @@ if __name__ == '__main__':
             categories=[]
         ),
     )
-    print(resp.json())
-    user_addon_id = resp.json()['id']
+    print(resp)
+    user_addon_id = resp.id
 
-    resp = bot.addon.get_user_addons(data=GetUserAddonsRequest(phone='09035718581'))
-    print(resp.json())
+    resp = app.addon.get_user_addons(data=GetUserAddonsRequest(phone='PHONE_NUMBER'))
+    print(resp)
 
-    resp = bot.addon.delete_user_addon(data=DeleteUserAddonRequest(id=user_addon_id))
-    print(resp.json())
+    resp = app.addon.delete_user_addon(data=DeleteUserAddonRequest(id=user_addon_id))
+    print(resp)
 
-    resp = bot.addon.get_user_addons(data=GetUserAddonsRequest(phone='09035718581'))
-    print(resp.json())
+    resp = app.addon.get_user_addons(data=GetUserAddonsRequest(phone='PHONE_NUMBER'))
+    print(resp)

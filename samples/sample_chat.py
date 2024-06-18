@@ -1,14 +1,14 @@
 from kenar.api_client.chatmessage import SendMessageV2Request, BotButton, SetNotifyChatPostConversationsRequest
-from kenar.bot import BaseBot
-from samples.sample_bot import app_conf
+from kenar.app import KenarApp
+from samples.sample_app import app_conf
 
-bot = BaseBot(app_conf)
+app = KenarApp(app_conf)
 
 if __name__ == '__main__':
-    bot.chat.send_message(
+    app.chat.send_message(
         message_data=SendMessageV2Request(
-            user_id='c3c7143f-96f3-4868-9730-0b14e1d6b950',
-            peer_id='3d9b0ceb-3556-4a81-bd6e-96ec6028e238',
+            user_id='USER_UUID',
+            peer_id='PEER_UUID',
             post_token='gZ6QmeWD',
             type='TEXT',
             message='سلام این پیام تستی است',
@@ -22,7 +22,7 @@ if __name__ == '__main__':
         ),
         access_token='ACCESS_TOKEN_HERE')
 
-    bot.chat.set_notify_chat_post_conversations(
+    app.chat.set_notify_chat_post_conversations(
         data=SetNotifyChatPostConversationsRequest(post_token='gZ6QmeWD', endpoint='https://test2.com',
                                                    identification_key='thest-identification-key'),
         access_token='ACCESS_TOKEN_HERE')

@@ -1,7 +1,8 @@
+from enum import Enum
 from typing import List, Optional, Dict
 
-import httpx
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel
+from pydantic.v1 import root_validator
 
 from kenar.api_client.request import _request
 
@@ -9,23 +10,10 @@ from kenar.api_client.request import _request
 class Widget(BaseModel):
     widget_type: str
     data: dict
-    # action: Optional[str] = None
-    #
-    # @field_serializer('action')
-    # def serialize_action(self, action: Optional[str], _info):
-    #     if action:
-    #         return {
-    #             "type": "LOAD_WEB_VIEW_PAGE",
-    #             "fallback_link": action,
-    #             "payload": {
-    #                 "@type": "type.googleapis.com/widgets.LoadWebViewPagePayload",
-    #                 "url": action
-    #             }
-    #         }
 
 
 class Widgets(BaseModel):
-    widget_list: list[Widget]
+    widget_list: List[Widget] = None
 
 
 class CreatePostAddonRequest(BaseModel):
@@ -38,18 +26,27 @@ class CreatePostAddonRequest(BaseModel):
 
 
 class CreatePostAddonResponse(BaseModel):
-    id: str
+    pass
 
 
 class DeletePostAddonRequest(BaseModel):
     token: str
 
 
+class Status(BaseModel):
+    class Status(str, Enum):
+        ACTIVE = 'ACTIVE'
+        INACTIVE = 'INACTIVE'
+        SUSPENDED = 'SUSPENDED'
+        DEVELOPMENT = 'DEVELOPMENT'
+    status: Status
+
+
 class App(BaseModel):
     slug: str
-    display: str
-    avatar: str
-    status: str
+    display: str = None
+    avatar: str = None
+    status: Status = None
     service_type: str
 
 
@@ -57,8 +54,8 @@ class AddonMetaData(BaseModel):
     id: str
     app: App
 
-    created_at: int  # google.protobuf.Timestamp
-    last_modified: int
+    created_at: str
+    last_modified: str
     status: str
 
 
@@ -71,13 +68,22 @@ class PostAddon(BaseModel):
 
     score: int
 
-    semantic: Dict[str, str]
-    semantic_sensitives: List[str]
+    semantic: Dict[str, str] = None
+    semantic_sensitives: List[str] = None
 
 
 class GetPostAddonsRequest(BaseModel):
-    id: str = ''  # TODO: oneof
-    token: str = ''
+    id: str = None
+    token: str = None
+
+    @root_validator(pre=True)
+    def check_mutually_exclusive(self, values):
+        id_, token_ = values.get('id'), values.get('token')
+        if id_ and token_:
+            raise ValueError('id and token are mutually exclusive.')
+        if not id_ and not token_:
+            raise ValueError('One of id or token must be set.')
+        return values
 
 
 class GetPostAddonsResponse(BaseModel):
@@ -106,6 +112,14 @@ class DeleteUserAddonRequest(BaseModel):
     id: str
 
 
+class DeletePostAddonResponse(BaseModel):
+    pass
+
+
+class DeleteUserAddonResponse(BaseModel):
+    pass
+
+
 class GetUserAddonsRequest(BaseModel):
     phone: str
 
@@ -128,27 +142,33 @@ class GetUserAddonsResponse(BaseModel):
     addons: List[UserAddon]
 
 
-def create_user_addon(client: httpx.Client, data: CreateUserAddonRequest) -> CreateUserAddonResponse:
-    return _request(client, f'https://api.divar.ir/v1/open-platform/addons/user/{data.phone}', 'POST', data)
+def create_user_addon(data: CreateUserAddonRequest, headers: Dict) -> CreateUserAddonResponse:
+    return CreateUserAddonResponse(
+        **_request(f'/v1/open-platform/addons/user/{data.phone}', 'POST', data,
+                   headers=headers).json())
 
 
-def delete_user_addon(client: httpx.Client, data: DeleteUserAddonRequest):
-    return _request(client, f'https://api.divar.ir/v1/open-platform/addons/user/{data.id}', 'DELETE', data)
+def delete_user_addon(data: DeleteUserAddonRequest, headers: Dict) -> DeleteUserAddonResponse:
+    return _request(f'/v1/open-platform/addons/user/{data.id}', 'DELETE', data, headers=headers)
 
 
-def get_user_addons(client: httpx.Client, data: GetUserAddonsRequest) -> GetUserAddonsResponse:
-    return _request(client, f'https://api.divar.ir/v1/open-platform/addons/user/{data.phone}', 'GET', data)
+def get_user_addons(data: GetUserAddonsRequest, headers: Dict) -> GetUserAddonsResponse:
+    return GetUserAddonsResponse(
+        **_request(f'/v1/open-platform/addons/user/{data.phone}', 'GET', data,
+                   headers=headers).json())
 
 
-def create_post_addon(client: httpx.Client, data: CreatePostAddonRequest) -> CreatePostAddonResponse:
-    return _request(client, f'https://api.divar.ir/v1/open-platform/addons/post/{data.token}', 'POST', data)
+def create_post_addon(data: CreatePostAddonRequest, headers: Dict) -> CreatePostAddonResponse:
+    _request(path=f'/v1/open-platform/addons/post/{data.token}', method='POST', data=data,
+             headers=headers)
+    return CreatePostAddonResponse()
 
 
-def delete_post_addon(client: httpx.Client, data: DeletePostAddonRequest):
-    return _request(client, f'https://api.divar.ir/v1/open-platform/addons/post/{data.token}', 'DELETE', data)
+def delete_post_addon(data: DeletePostAddonRequest, headers: Dict) -> DeletePostAddonResponse:
+    return _request(f'/v1/open-platform/addons/post/{data.token}', 'DELETE', data, headers=headers)
 
 
-def get_post_addons(client: httpx.Client, data: GetPostAddonsRequest) -> GetPostAddonsResponse:
-    return _request(client, f'https://api.divar.ir/v1/open-platform/addons/post/{data.token}', 'GET', data)
-
-
+def get_post_addons(data: GetPostAddonsRequest, headers: Dict) -> GetPostAddonsResponse:
+    return GetPostAddonsResponse(
+        **_request(f'/v1/open-platform/addons/post/{data.token}', 'GET', data,
+                   headers=headers).json())

@@ -3,7 +3,7 @@ import os
 
 from dotenv import load_dotenv
 
-from kenar.bot import AppConfig, BaseBot
+from kenar.app import AppConfig, KenarApp
 
 load_dotenv()
 
@@ -15,4 +15,4 @@ app_conf = AppConfig(app_slug=os.environ.get("KENAR_APP_SLUG"),
                      oauth_redirect_url=os.environ.get("KENAR_OAUTH_REDIRECT_URL"),
                      oauth_secret=os.environ.get('KENAR_OAUTH_SECRET'))
 
-bot = BaseBot(app_conf)
+app = KenarApp(app_conf)

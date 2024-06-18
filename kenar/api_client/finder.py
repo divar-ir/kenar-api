@@ -1,9 +1,8 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 
-import httpx
 from pydantic import BaseModel
 
-from kenar.api_client.request import _request, merge_headers
+from kenar.api_client.request import _request
 
 
 class SearchPostRequest(BaseModel):
@@ -25,21 +24,37 @@ class GetUserRequest(BaseModel):
     pass
 
 
-class GetUserPosts(BaseModel):
+class GetUserResponse(BaseModel):
+    phone_numbers: List[str]
+
+
+class GetUserPostsRequest(BaseModel):
     pass
 
 
-def search_post(client: httpx.Client, data: SearchPostRequest) -> SearchPostResponse:
-    return _request(client, 'https://api.divar.ir/v1/open-platform/finder/post', 'POST', data)
+class GetUserPostsResponse(BaseModel):
+    class Post(BaseModel):
+        token: str
+        title: str
+        images: List[str] = None
+        category: str
+
+    posts: List[Post]
 
 
-def get_post(client: httpx.Client, data: GetPostRequest):
-    return _request(client, f'https://api.divar.ir/v1/open-platform/finder/post/{data.token}', 'GET', data)
+def search_post(data: SearchPostRequest, headers: Dict) -> SearchPostResponse:
+    return _request('/v1/open-platform/finder/post', 'POST', data, headers=headers)
 
 
-def get_user(client: httpx.Client, data: GetUserRequest):
-    return _request(client, f'https://api.divar.ir/v1/open-platform/users', 'POST', data)
+def get_post(data: GetPostRequest, headers: Dict):
+    return _request(f'/v1/open-platform/finder/post/{data.token}', 'GET', data, headers=headers)
 
 
-def get_user_posts(client: httpx.Client, data: GetUserPosts):
-    return _request(client, f'https://api.divar.ir/v1/open-platform/finder/user-posts', 'GET', data)
+def get_user(data: GetUserRequest, headers: Dict) -> GetUserResponse:
+    return GetUserResponse(
+        **_request(f'/v1/open-platform/users', 'POST', data, headers=headers).json())
+
+
+def get_user_posts(data: GetUserPostsRequest, headers: Dict) -> GetUserPostsResponse:
+    return GetUserPostsResponse(
+        **_request(f'/v1/open-platform/finder/user-posts', 'GET', data, headers=headers).json())
