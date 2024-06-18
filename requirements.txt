@@ -1,3 +1,2 @@
 httpx==0.26.0
-gunicorn==21.2.0
 pydantic==2.6.0

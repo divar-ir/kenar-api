@@ -2,6 +2,8 @@ import abc
 
 from pydantic import BaseModel
 
+from kenar.bot import BaseBot
+
 
 class ChatMessagePayloadUser(BaseModel):
     id: str
@@ -38,16 +40,11 @@ class Handler(abc.ABC):
     def __init__(self):
         self.bot = None
 
-    def register(self, bot):
+    def register(self, bot: BaseBot):
         self.bot = bot
 
     @abc.abstractmethod
     def handle(self, notification: Notification):
-        raise NotImplemented
-
-    @abc.abstractmethod
-    def handle_create_post_addon(self, payload):
-        # TODO: type safe
         raise NotImplemented
 
 

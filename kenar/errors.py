@@ -1,6 +1,6 @@
-class IdentificationKeyError(Exception):
+class HTTPException(Exception):
     pass
 
 
-class SendBotMessageError(Exception):
+class APIException(Exception):
     pass
