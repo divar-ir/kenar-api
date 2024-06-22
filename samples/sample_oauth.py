@@ -1,9 +1,18 @@
+import os
+
 from kenar.api_client.oauth import OauthResourceType
-from kenar.app import Scope, SendChatMessageResourceIdParams
+from kenar.app import Scope, SendChatMessageResourceIdParams, AppOauthConfig
 from kenar.errors import APIException
 from samples.sample_app import app
 
+
+oauthConfig = AppOauthConfig(
+    oauth_redirect_url=os.environ.get("KENAR_OAUTH_REDIRECT_URL"),
+    oauth_secret=os.environ.get('KENAR_OAUTH_SECRET'),
+)
+
 if __name__ == '__main__':
+    app.add_oauth_service(oauthConfig)
     try:
         state = '348656686'
         scopes = [Scope(resource_type=OauthResourceType.POST_ADDON_CREATE, resource_id='gZ6QmeWD'),

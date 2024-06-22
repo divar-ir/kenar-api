@@ -115,7 +115,7 @@ class OAuthService:
         scope = [f'{scope.resource_type}.{scope.resource_id}' if scope.resource_id is not None else scope.resource_type
                  for scope in
                  scopes]
-        return f'/oauth2/auth?response_type=code&' \
+        return f'https://api.divar.ir/oauth2/auth?response_type=code&' \
                f'client_id={urllib.parse.quote(self._app_slug)}&' \
                f'state={state}&' \
                f'redirect_uri={urllib.parse.quote(self._oauth_redirect_url)}&' \
@@ -146,6 +146,7 @@ class KenarApp:
             raise ValueError("the KENAR_APP_SLUG environment variable must be set")
 
         self.default_headers = {"x-api-key": conf.api_key}
+        self.app_config = conf
         self.oauth = None
         self.chat = None
 
@@ -163,7 +164,7 @@ class KenarApp:
             raise ValueError("the KENAR_OAUTH_REDIRECT_URL environment variable must be set")
         if not conf.oauth_secret:
             raise ValueError("the KENAR_OAUTH_SECRET environment variable must be set")
-        self.oauth = OAuthService(app_slug=conf.app_slug,
+        self.oauth = OAuthService(app_slug=self.app_config.app_slug,
                                   oauth_redirect_url=conf.oauth_redirect_url,
                                   oauth_secret=conf.oauth_secret, default_headers=self.default_headers)
 

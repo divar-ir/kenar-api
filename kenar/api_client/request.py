@@ -26,7 +26,7 @@ def _request(path: str, method: str, data: JSONSerializable, headers: Dict):
         else:
             resp = httpx.request(
                 method=method,
-                url=path,
+                url='https://api.divar.ir' + path,
                 content=data.json() if data is not None else '',
                 headers=headers
             )

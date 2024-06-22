@@ -1,10 +1,15 @@
+import os
+
 from kenar.api_client.chatmessage import SendMessageV2Request, BotButton, SetNotifyChatPostConversationsRequest
-from kenar.app import KenarApp
+from kenar.app import KenarApp, AppChatConfig
 from samples.sample_app import app_conf
 
 app = KenarApp(app_conf)
-
+chatConfig = AppChatConfig(
+    identification_key=os.environ.get("KENAR_IDENT_KEY"),
+)
 if __name__ == '__main__':
+    app.add_chat_service(chatConfig)
     app.chat.send_message(
         message_data=SendMessageV2Request(
             user_id='USER_UUID',

@@ -2,6 +2,7 @@ from kenar.api_client.finder import SearchPostRequest, GetUserRequest, GetUserPo
 from samples.sample_app import app
 
 if __name__ == '__main__':
+    app.add_finder_service()
     resp = app.finder.get_post(GetPostRequest(token='wYIw8OJp'))
     print(resp)
 

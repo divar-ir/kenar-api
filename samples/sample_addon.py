@@ -3,6 +3,7 @@ from kenar.api_client.addon import CreatePostAddonRequest, Widgets, Widget, Crea
 from samples.sample_app import app
 
 if __name__ == '__main__':
+    app.add_addon_service()
     resp = app.addon.create_post_addon(
         access_token='ACCESS_TOKEN_HERE',
         data=CreatePostAddonRequest(
@@ -19,10 +20,10 @@ if __name__ == '__main__':
                 },
                 "action": {
                     "type": "LOAD_WEB_VIEW_PAGE",
-                    "fallback_link": "https://verification-addon.divar.ir",
+                    "fallback_link": "https://test.path.com",
                     "payload": {
                         "@type": "type.googleapis.com/widgets.LoadWebViewPagePayload",
-                        "url": "https://verification-addon.divar.ir"
+                        "url": "https://test.path.com"
                     }
                 }
             })]),
@@ -54,10 +55,10 @@ if __name__ == '__main__':
                 },
                 "action": {
                     "type": "LOAD_WEB_VIEW_PAGE",
-                    "fallback_link": "https://verification-addon.divar.ir",
+                    "fallback_link": "https://test.path.com",
                     "payload": {
                         "@type": "type.googleapis.com/widgets.LoadWebViewPagePayload",
-                        "url": "https://verification-addon.divar.ir"
+                        "url": "https://test.path.com"
                     }
                 }
             })]),
