@@ -1,9 +1,6 @@
 from enum import Enum
-from typing import Dict
 
 from pydantic import BaseModel
-
-from kenar.api_client.request import _request
 
 
 class BotButton(BaseModel):
@@ -44,15 +41,3 @@ class SendMessageV2Request(BaseModel):
 class SendMessageV2Response(BaseModel):
     status: int
     message: str
-
-
-def set_notify_chat_post_conversations(data: SetNotifyChatPostConversationsRequest,
-                                       headers: Dict) -> SetNotifyChatPostConversationsResponse:
-    _request(path='/v1/open-platform/notify/chat/post-conversations',
-             data=data, method='POST', headers=headers)
-    return SetNotifyChatPostConversationsResponse()
-
-
-def send_message(data: SendMessageV2Request, headers: Dict) -> SendMessageV2Response:
-    return SendMessageV2Response(**_request(path='/v2/open-platform/chat/conversation',
-                                            data=data, method='POST', headers=headers).json())

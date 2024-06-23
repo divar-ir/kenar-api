@@ -1,10 +1,8 @@
 from enum import Enum
 from typing import List, Optional, Dict
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_serializer
 from pydantic.v1 import root_validator
-
-from kenar.api_client.request import _request
 
 
 class Widget(BaseModel):
@@ -33,12 +31,17 @@ class DeletePostAddonRequest(BaseModel):
     token: str
 
 
+class DeletePostAddonResponse(BaseModel):
+    pass
+
+
 class Status(BaseModel):
     class Status(str, Enum):
         ACTIVE = 'ACTIVE'
         INACTIVE = 'INACTIVE'
         SUSPENDED = 'SUSPENDED'
         DEVELOPMENT = 'DEVELOPMENT'
+
     status: Status
 
 
@@ -85,9 +88,13 @@ class GetPostAddonsRequest(BaseModel):
             raise ValueError('One of id or token must be set.')
         return values
 
+    @model_serializer
+    def ser_model(self) -> dict:
+        return {'id': self.id} if self.id is not None else {'token': self.token}
+
 
 class GetPostAddonsResponse(BaseModel):
-    addons: List[PostAddon]
+    addons: List[PostAddon] = None
 
 
 class CreateUserAddonRequest(BaseModel):
@@ -139,36 +146,4 @@ class UserAddon(BaseModel):
 
 
 class GetUserAddonsResponse(BaseModel):
-    addons: List[UserAddon]
-
-
-def create_user_addon(data: CreateUserAddonRequest, headers: Dict) -> CreateUserAddonResponse:
-    return CreateUserAddonResponse(
-        **_request(f'/v1/open-platform/addons/user/{data.phone}', 'POST', data,
-                   headers=headers).json())
-
-
-def delete_user_addon(data: DeleteUserAddonRequest, headers: Dict) -> DeleteUserAddonResponse:
-    return _request(f'/v1/open-platform/addons/user/{data.id}', 'DELETE', data, headers=headers)
-
-
-def get_user_addons(data: GetUserAddonsRequest, headers: Dict) -> GetUserAddonsResponse:
-    return GetUserAddonsResponse(
-        **_request(f'/v1/open-platform/addons/user/{data.phone}', 'GET', data,
-                   headers=headers).json())
-
-
-def create_post_addon(data: CreatePostAddonRequest, headers: Dict) -> CreatePostAddonResponse:
-    _request(path=f'/v1/open-platform/addons/post/{data.token}', method='POST', data=data,
-             headers=headers)
-    return CreatePostAddonResponse()
-
-
-def delete_post_addon(data: DeletePostAddonRequest, headers: Dict) -> DeletePostAddonResponse:
-    return _request(f'/v1/open-platform/addons/post/{data.token}', 'DELETE', data, headers=headers)
-
-
-def get_post_addons(data: GetPostAddonsRequest, headers: Dict) -> GetPostAddonsResponse:
-    return GetPostAddonsResponse(
-        **_request(f'/v1/open-platform/addons/post/{data.token}', 'GET', data,
-                   headers=headers).json())
+    addons: List[UserAddon] = None

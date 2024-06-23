@@ -1,9 +1,8 @@
-from kenar.api_client.addon import CreatePostAddonRequest, Widgets, Widget, CreateUserAddonRequest, \
+from kenar.models.addon import CreatePostAddonRequest, Widgets, Widget, CreateUserAddonRequest, \
     GetPostAddonsRequest, DeletePostAddonRequest, GetUserAddonsRequest, DeleteUserAddonRequest
 from samples.sample_app import app
 
 if __name__ == '__main__':
-    app.add_addon_service()
     resp = app.addon.create_post_addon(
         access_token='ACCESS_TOKEN_HERE',
         data=CreatePostAddonRequest(

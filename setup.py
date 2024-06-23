@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Kenar',
-    version='0.2.0',
+    version='0.3.0',
     author='Nastaran Alipour',
     author_email='nastaran.alipour78@gmail.com',
     description='facilitate using kenar divar APIs',

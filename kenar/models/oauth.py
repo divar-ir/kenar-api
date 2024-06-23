@@ -3,8 +3,6 @@ from typing import Dict
 
 from pydantic import BaseModel
 
-from kenar.api_client.request import _request
-
 
 class OauthResourceType(str, Enum):
     UNKNOWN = 'UNKNOWN'
@@ -43,8 +41,3 @@ class OAuthAccessTokenRequest(BaseModel):
         object_dict['grant_type'] = 'authorization_code'
 
         return object_dict
-
-
-def get_access_token(data: OAuthAccessTokenRequest, headers: Dict) -> AccessTokenResponse:
-    return AccessTokenResponse(
-        **_request(path='/oauth2/token', data=data, method='POST', headers=headers).json())
