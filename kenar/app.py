@@ -9,7 +9,8 @@ from pydantic import BaseModel
 from kenar.models.addon import CreateUserAddonRequest, CreateUserAddonResponse, DeleteUserAddonRequest, \
     GetUserAddonsRequest, GetUserAddonsResponse, CreatePostAddonRequest, CreatePostAddonResponse, \
     DeletePostAddonRequest, GetPostAddonsRequest, GetPostAddonsResponse, DeletePostAddonResponse
-from kenar.models.chatmessage import SetNotifyChatPostConversationsRequest, SendMessageV2Request, SendMessageV2Response
+from kenar.models.chatmessage import SetNotifyChatPostConversationsRequest, SendMessageV2Request, SendMessageV2Response, \
+    SetNotifyChatPostConversationsResponse
 from kenar.models.finder import SearchPostRequest, \
     SearchPostResponse, GetPostRequest, GetUserRequest, \
     GetUserPostsRequest, GetUserResponse, GetUserPostsResponse, GetPostResponse
@@ -52,7 +53,10 @@ class ChatService:
     def __init__(self, client: httpx.Client):
         self._client = client
 
-    def set_notify_chat_post_conversations(self, access_token: str, data: SetNotifyChatPostConversationsRequest):
+    def set_notify_chat_post_conversations(
+            self, access_token: str,
+            data: SetNotifyChatPostConversationsRequest,
+    ) -> SetNotifyChatPostConversationsResponse:
         @retry(max_retries=3, delay=1)
         def send_request():
             return self._client.post(
@@ -61,8 +65,8 @@ class ChatService:
                 headers={ACCESS_TOKEN_HEADER_NAME: access_token}
             )
 
-        rsp = send_request()
-        return SearchPostResponse(**rsp.json())
+        send_request()
+        return SetNotifyChatPostConversationsResponse()
 
     def send_message(self, access_token: str, data: SendMessageV2Request) -> SendMessageV2Response:
         @retry(max_retries=3, delay=1)
