@@ -258,7 +258,7 @@ class KenarApp:
 
         self._client = httpx.Client(
             timeout=1,
-            headers={'KenarDivarSDK-Version': version('KenarDivar'), 'x-api-key': conf.api_key,
+            headers={'KenarDivarSDK-Version': version('Kenar'), 'x-api-key': conf.api_key,
                      'Content-Type': 'application/json'},
             base_url='https://api.divar.ir')
         self._oauth = OAuthService(client=self._client, app_slug=self.app_config.app_slug,
