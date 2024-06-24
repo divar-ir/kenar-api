@@ -222,7 +222,7 @@ class OAuthService:
                f'client_id={urllib.parse.quote(self._app_slug)}&' \
                f'state={state}&' \
                f'redirect_uri={urllib.parse.quote(self._oauth_redirect_url)}&' \
-               f'scope={urllib.parse.quote(" ".join(scope))}'
+               f'scope={urllib.parse.quote("+".join(scope))}'
 
     def get_access_token(self, authorization_token: str) -> AccessTokenResponse:
         @retry(max_retries=3, delay=1)
