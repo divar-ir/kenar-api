@@ -215,7 +215,7 @@ class OAuthService:
         self._client = client
 
     def get_oauth_redirect(self, scopes: List[Scope], state: str) -> str:
-        scope = [f'{scope.resource_type}.{scope.resource_id}' if scope.resource_id is not None else scope.resource_type
+        scope = [f'{scope.resource_type.value}.{scope.resource_id}' if scope.resource_id is not None else scope.resource_type
                  for scope in
                  scopes]
         return f'https://api.divar.ir/oauth2/auth?response_type=code&' \
