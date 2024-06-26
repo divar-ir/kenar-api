@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -34,8 +35,8 @@ class SendMessageV2Request(BaseModel):
     post_token: str
     type: str = 'TEXT'
     message: str
-    sender_btn: BotButton
-    receiver_btn: BotButton
+    sender_btn: Optional[BotButton]
+    receiver_btn: Optional[BotButton]
 
 
 class SendMessageV2Response(BaseModel):
