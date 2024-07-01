@@ -1,0 +1,20 @@
+from typing import Dict
+
+from pydantic import BaseModel, model_validator
+
+
+class SubtitleRow(BaseModel):
+    text: str
+    has_divider: bool = False
+
+    def serialize_model(self) -> dict:
+        return {
+            "widget_type": "SUBTITLE_ROW",
+            "data": {"@type": "type.googleapis.com/widgets.SubtitleRowData"} | self.dict()
+        }
+
+    @classmethod
+    def deserialize_model(cls, data: Dict):
+        widget_data = data.get('data', {})
+        widget_data.pop('@type', None)
+        return cls.parse_obj(widget_data)

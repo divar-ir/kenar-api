@@ -1,26 +1,23 @@
 from enum import Enum
 from typing import List, Optional, Dict
 
-from pydantic import BaseModel, model_serializer
+from pydantic import BaseModel, model_serializer, field_serializer, field_validator
 from pydantic.v1 import root_validator
 
-
-class Widget(BaseModel):
-    widget_type: str
-    data: dict
-
-
-class Widgets(BaseModel):
-    widget_list: List[Widget] = None
+from kenar.models.widgets.widget_type import get_widget_class, WidgetTypesUnion
 
 
 class CreatePostAddonRequest(BaseModel):
     token: str
 
-    widgets: Widgets
+    widgets: List[WidgetTypesUnion]
     notes: str = ''
     semantic: Dict[str, str] = {}
     semantic_sensitives: List[str] = []
+
+    @field_serializer('widgets')
+    def serialize_widgets(self, widgets, _info):
+        return {'widget_list': [w.serialize_model() for w in widgets]}
 
 
 class CreatePostAddonResponse(BaseModel):
@@ -67,12 +64,25 @@ class PostAddon(BaseModel):
 
     token: str
 
-    widgets: Widgets
+    widgets: List[WidgetTypesUnion] = None
 
     score: int
 
     semantic: Dict[str, str] = None
     semantic_sensitives: List[str] = None
+
+    @field_validator('widgets', mode='before')
+    @classmethod
+    def deserialize_model(cls, widgets: Dict):
+        widget_list = widgets.get("widget_list", [])
+        return [get_widget_class(w['widget_type']).deserialize_model(w) for w in widget_list]
+
+    @field_serializer('widgets')
+    def serialize_widgets(self, widgets, _info):
+        if widgets:
+            p = [w.serialize_model() for w in widgets]
+            return {'widget_list': p}
+        return None
 
 
 class GetPostAddonsRequest(BaseModel):
@@ -98,7 +108,7 @@ class GetPostAddonsResponse(BaseModel):
 
 
 class CreateUserAddonRequest(BaseModel):
-    widgets: Widgets
+    widgets: List[WidgetTypesUnion]
 
     semantic: Dict[str, str] = {}
     semantic_sensitives: List[str] = []
@@ -110,6 +120,11 @@ class CreateUserAddonRequest(BaseModel):
     ticket_uuid: Optional[str] = None
     verification_cost: Optional[int] = None
 
+    @field_serializer('widgets')
+    def serialize_widgets(self, widgets, _info):
+        p = [w.serialize_model() for w in widgets]
+        return {'widget_list': p}
+
 
 class CreateUserAddonResponse(BaseModel):
     id: str
@@ -117,10 +132,6 @@ class CreateUserAddonResponse(BaseModel):
 
 class DeleteUserAddonRequest(BaseModel):
     id: str
-
-
-class DeletePostAddonResponse(BaseModel):
-    pass
 
 
 class DeleteUserAddonResponse(BaseModel):
@@ -138,11 +149,24 @@ class UserAddonFilters(BaseModel):
 class UserAddon(BaseModel):
     meta_data: AddonMetaData
     phone: str
-    widgets: Widgets
+    widgets: List[WidgetTypesUnion] = None
 
     semantic: Dict[str, str] = {}
 
     filters: UserAddonFilters
+
+    @field_validator('widgets', mode='before')
+    @classmethod
+    def deserialize_model(cls, widgets: Dict):
+        widget_list = widgets.get("widget_list", [])
+        return [get_widget_class(w['widget_type']).deserialize_model(w) for w in widget_list]
+
+    @field_serializer('widgets')
+    def serialize_widgets(self, widgets, _info):
+        if widgets:
+            p = [w.serialize_model() for w in widgets]
+            return {'widget_list': p}
+        return None
 
 
 class GetUserAddonsResponse(BaseModel):
