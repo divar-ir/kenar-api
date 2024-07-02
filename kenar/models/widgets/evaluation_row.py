@@ -1,13 +1,13 @@
 from typing import Dict
 
-from pydantic import model_serializer, BaseModel, field_validator, model_validator
-from pydantic.v1 import root_validator
+from pydantic import BaseModel, field_validator
 
 from kenar.models.icons import Icon
+from kenar.models.widgets.base import BaseWidget
 from kenar.models.widgets.color import Color
 
 
-class EvaluationRow(BaseModel):
+class EvaluationRow(BaseModel, BaseWidget):
     class Section(BaseModel):
         text: str
         text_color: Color

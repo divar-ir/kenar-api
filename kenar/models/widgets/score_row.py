@@ -1,14 +1,15 @@
 from typing import Optional, Dict
 
-from pydantic import BaseModel, model_serializer, model_validator
+from pydantic import BaseModel, model_validator
 from typing_extensions import Self
 
+from kenar.models.widgets.base import BaseWidget
 from kenar.models.widgets.color import Color
 from kenar.models.widgets.action import get_action, get_link_from_action
 from kenar.models.icons import Icon
 
 
-class ScoreRow(BaseModel):
+class ScoreRow(BaseModel, BaseWidget):
     title: str
 
     descriptive_score: Optional[str] = None

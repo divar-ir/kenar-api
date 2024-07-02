@@ -1,9 +1,11 @@
 from typing import Dict
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel
+
+from kenar.models.widgets.base import BaseWidget
 
 
-class SubtitleRow(BaseModel):
+class SubtitleRow(BaseModel, BaseWidget):
     text: str
     has_divider: bool = False
 

@@ -1,12 +1,13 @@
 from enum import Enum
 from typing import List, Dict
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
 from kenar.models.icons import Icon
+from kenar.models.widgets.base import BaseWidget
 
 
-class LegendTitleRow(BaseModel):
+class LegendTitleRow(BaseModel, BaseWidget):
     class Tag(BaseModel):
         class BackgroundColor(str, Enum):
             TRANSPARENT = 'TRANSPARENT'

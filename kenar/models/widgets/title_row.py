@@ -1,11 +1,12 @@
 from typing import Dict
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel
 
+from kenar.models.widgets.base import BaseWidget
 from kenar.models.widgets.color import Color
 
 
-class TitleRow(BaseModel):
+class TitleRow(BaseModel, BaseWidget):
     text: str
     text_color: Color = Color.TEXT_PRIMARY
 

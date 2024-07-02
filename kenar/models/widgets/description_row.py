@@ -1,10 +1,12 @@
-from typing import Any, Dict
+from typing import Dict
 
-from pydantic import BaseModel, model_validator, field_validator
+from pydantic import BaseModel, model_validator
 from typing_extensions import Self
 
+from kenar.models.widgets.base import BaseWidget
 
-class DescriptionRow(BaseModel):
+
+class DescriptionRow(BaseModel, BaseWidget):
     text: str
     has_divider: bool = False
     is_primary: bool

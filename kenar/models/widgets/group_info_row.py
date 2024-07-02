@@ -1,9 +1,11 @@
 from typing import List, Dict
 
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, field_validator
+
+from kenar.models.widgets.base import BaseWidget
 
 
-class GroupInfo(BaseModel):
+class GroupInfo(BaseModel, BaseWidget):
     class GroupInfoItem(BaseModel):
         title: str
         value: str

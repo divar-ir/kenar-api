@@ -1,14 +1,14 @@
 from typing import Dict
 
-from pydantic import BaseModel, model_validator
 
 from pydantic import BaseModel
 
 from kenar.models.icons import Icon
 from kenar.models.widgets.action import get_action, get_link_from_action
+from kenar.models.widgets.base import BaseWidget
 
 
-class EventRow(BaseModel):
+class EventRow(BaseModel, BaseWidget):
     title: str
     subtitle: str = ''
     has_indicator: bool = False
