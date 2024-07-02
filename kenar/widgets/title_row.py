@@ -13,11 +13,12 @@ class TitleRow(BaseModel, BaseWidget):
     def serialize_model(self) -> dict:
         return {
             "widget_type": "TITLE_ROW",
-            "data": {"@type": "type.googleapis.com/widgets.TitleRowData"} | self.model_dump()
+            "data": {"@type": "type.googleapis.com/widgets.TitleRowData"}
+            | self.model_dump(),
         }
 
     @classmethod
     def deserialize_model(cls, data: Dict):
-        widget_data = data.get('data', {})
-        widget_data.pop('@type', None)
+        widget_data = data.get("data", {})
+        widget_data.pop("@type", None)
         return cls.parse_obj(widget_data)

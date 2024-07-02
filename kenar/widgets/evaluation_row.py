@@ -24,22 +24,22 @@ class EvaluationRow(BaseModel, BaseWidget):
     middle: Section
     right: Section
 
-    @field_validator('indicator_percentage')
+    @field_validator("indicator_percentage")
     @classmethod
     def check_indicator_percentage(cls, indicator_percentage: int) -> int:
         if indicator_percentage < 0 or indicator_percentage > 100:
-            raise ValueError('Field indicator_percentage should be in range [0,100]')
+            raise ValueError("Field indicator_percentage should be in range [0,100]")
         return indicator_percentage
 
     def serialize_model(self) -> dict:
         return {
             "widget_type": "EVALUATION_ROW",
-            "data": {"@type": "type.googleapis.com/widgets.EvaluationRowData"} |
-                    self.model_dump()
+            "data": {"@type": "type.googleapis.com/widgets.EvaluationRowData"}
+            | self.model_dump(),
         }
 
     @classmethod
     def deserialize_model(cls, data: Dict):
-        widget_data = data.get('data', {})
-        widget_data.pop('@type', None)
+        widget_data = data.get("data", {})
+        widget_data.pop("@type", None)
         return cls.parse_obj(widget_data)

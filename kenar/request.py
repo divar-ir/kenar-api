@@ -28,8 +28,10 @@ def retry(max_retries=3, delay=0):
                     if retries > max_retries:
                         error_details = response.text
                         raise Exception(
-                            f"HTTP error occurred: {e}. Error Detail: {error_details}") from None
+                            f"HTTP error occurred: {e}. Error Detail: {error_details}"
+                        ) from None
                     time.sleep(delay)
+
         return wrapper_retry
 
     return decorator_retry

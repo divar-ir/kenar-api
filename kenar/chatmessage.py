@@ -6,8 +6,8 @@ from pydantic import BaseModel
 
 class BotButton(BaseModel):
     class Action(Enum):
-        LINK = 'LINK'
-        DIRECT_LINK = 'DIRECT_LINK'
+        LINK = "LINK"
+        DIRECT_LINK = "DIRECT_LINK"
 
     class ButtonData(BaseModel):
         icon_name: str
@@ -33,7 +33,7 @@ class SendMessageV2Request(BaseModel):
     user_id: str
     peer_id: str
     post_token: str
-    type: str = 'TEXT'
+    type: str = "TEXT"
     message: str
     sender_btn: Optional[BotButton]
     receiver_btn: Optional[BotButton]
@@ -42,3 +42,14 @@ class SendMessageV2Request(BaseModel):
 class SendMessageV2Response(BaseModel):
     status: int
     message: str
+
+
+class PostConversationsNotificationRegisterPayload(BaseModel):
+    post_token: str
+    phone: str = None
+    endpoint: str
+
+
+class PostConversationsNotificationPayload(BaseModel):
+    registration_payload: PostConversationsNotificationRegisterPayload
+    identification_key: str
