@@ -1,5 +1,6 @@
 import time
 from functools import wraps
+from typing import Optional
 
 import httpx
 
@@ -16,17 +17,19 @@ def retry(max_retries=3, delay=0):
         @wraps(func)
         def wrapper_retry(*args, **kwargs):
             retries = 0
+            response: Optional[httpx.Response] = None
             while True:
                 try:
                     response = func(*args, **kwargs)
                     response.raise_for_status()
                     return response
-                except (httpx.RequestError, httpx.HTTPStatusError) as e:
+                except httpx.HTTPStatusError as e:
                     retries += 1
                     if retries > max_retries:
-                        raise e
+                        error_details = response.text
+                        raise Exception(
+                            f"HTTP error occurred: {e}. Error Detail: {error_details}") from None
                     time.sleep(delay)
-
         return wrapper_retry
 
     return decorator_retry

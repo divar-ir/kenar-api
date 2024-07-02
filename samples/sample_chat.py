@@ -1,4 +1,4 @@
-from kenar.models.chatmessage import SendMessageV2Request, BotButton, SetNotifyChatPostConversationsRequest
+from kenar.chatmessage import SendMessageV2Request, BotButton, SetNotifyChatPostConversationsRequest
 from samples.sample_app import app
 
 if __name__ == '__main__':
