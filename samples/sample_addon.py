@@ -1,4 +1,4 @@
-from kenar.models.addon import (
+from kenar.addon import (
     CreatePostAddonRequest,
     GetUserAddonsRequest,
     DeleteUserAddonRequest,
@@ -6,8 +6,8 @@ from kenar.models.addon import (
     DeletePostAddonRequest,
     CreateUserAddonRequest,
 )
-from kenar.models.icons import IconName, Icon
-from kenar.models.widgets import (
+from kenar.icons import IconName, Icon
+from kenar.widgets import (
     TitleRow,
     SubtitleRow,
     SelectorRow,

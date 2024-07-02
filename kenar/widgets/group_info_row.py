@@ -2,7 +2,7 @@ from typing import List, Dict
 
 from pydantic import BaseModel, field_validator
 
-from kenar.models.widgets.base import BaseWidget
+from kenar.widgets.base import BaseWidget
 
 
 class GroupInfo(BaseModel, BaseWidget):

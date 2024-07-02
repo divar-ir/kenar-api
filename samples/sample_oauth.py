@@ -1,8 +1,6 @@
-import os
-
 import httpx
 
-from kenar.models.oauth import OauthResourceType
+from kenar.oauth import OauthResourceType
 from kenar.app import Scope, SendChatMessageResourceIdParams
 from samples.sample_app import app
 

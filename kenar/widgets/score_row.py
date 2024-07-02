@@ -3,10 +3,10 @@ from typing import Optional, Dict
 from pydantic import BaseModel, model_validator
 from typing_extensions import Self
 
-from kenar.models.widgets.base import BaseWidget
-from kenar.models.widgets.color import Color
-from kenar.models.widgets.action import get_action, get_link_from_action
-from kenar.models.icons import Icon
+from kenar.widgets.base import BaseWidget
+from kenar.widgets.color import Color
+from kenar.widgets.action import get_action, get_link_from_action
+from kenar.icons import Icon
 
 
 class ScoreRow(BaseModel, BaseWidget):

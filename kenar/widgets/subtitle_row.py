@@ -2,18 +2,17 @@ from typing import Dict
 
 from pydantic import BaseModel
 
-from kenar.models.widgets.base import BaseWidget
-from kenar.models.widgets.color import Color
+from kenar.widgets.base import BaseWidget
 
 
-class TitleRow(BaseModel, BaseWidget):
+class SubtitleRow(BaseModel, BaseWidget):
     text: str
-    text_color: Color = Color.TEXT_PRIMARY
+    has_divider: bool = False
 
     def serialize_model(self) -> dict:
         return {
-            "widget_type": "TITLE_ROW",
-            "data": {"@type": "type.googleapis.com/widgets.TitleRowData"} | self.model_dump()
+            "widget_type": "SUBTITLE_ROW",
+            "data": {"@type": "type.googleapis.com/widgets.SubtitleRowData"} | self.dict()
         }
 
     @classmethod

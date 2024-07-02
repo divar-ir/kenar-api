@@ -6,17 +6,17 @@ from typing import List, Optional
 import httpx
 from pydantic import BaseModel
 
-from kenar.models.addon import CreateUserAddonRequest, CreateUserAddonResponse, DeleteUserAddonRequest, \
+from kenar.addon import CreateUserAddonRequest, CreateUserAddonResponse, DeleteUserAddonRequest, \
     GetUserAddonsRequest, GetUserAddonsResponse, CreatePostAddonRequest, CreatePostAddonResponse, \
     DeletePostAddonRequest, GetPostAddonsRequest, GetPostAddonsResponse, DeletePostAddonResponse
-from kenar.models.chatmessage import SetNotifyChatPostConversationsRequest, SendMessageV2Request, SendMessageV2Response, \
+from kenar.chatmessage import SetNotifyChatPostConversationsRequest, SendMessageV2Request, SendMessageV2Response, \
     SetNotifyChatPostConversationsResponse
-from kenar.models.finder import SearchPostRequest, \
+from kenar.finder import SearchPostRequest, \
     SearchPostResponse, GetPostRequest, GetUserRequest, \
     GetUserPostsRequest, GetUserResponse, GetUserPostsResponse, GetPostResponse
-from kenar.models.image import UploadImageResponse
-from kenar.models.oauth import OAuthAccessTokenRequest, AccessTokenResponse, OauthResourceType
-from kenar.models.request import retry
+from kenar.image import UploadImageResponse
+from kenar.oauth import OAuthAccessTokenRequest, AccessTokenResponse, OauthResourceType
+from kenar.request import retry
 
 ACCESS_TOKEN_HEADER_NAME = 'x-access-token'
 

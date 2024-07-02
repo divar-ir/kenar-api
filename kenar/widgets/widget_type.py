@@ -1,15 +1,15 @@
 from typing import Optional, Type, Union
 
-from kenar.models.widgets.description_row import DescriptionRow
-from kenar.models.widgets.evaluation_row import EvaluationRow
-from kenar.models.widgets.event_row import EventRow
-from kenar.models.widgets.group_info_row import GroupInfo
-from kenar.models.widgets.legend_title_row import LegendTitleRow
-from kenar.models.widgets.score_row import ScoreRow
-from kenar.models.widgets.selector_row import SelectorRow
-from kenar.models.widgets.subtitle_row import SubtitleRow
-from kenar.models.widgets.title_row import TitleRow
-from kenar.models.widgets.wide_button_bar import WideButtonBar
+from kenar.widgets.description_row import DescriptionRow
+from kenar.widgets.evaluation_row import EvaluationRow
+from kenar.widgets.event_row import EventRow
+from kenar.widgets.group_info_row import GroupInfo
+from kenar.widgets.legend_title_row import LegendTitleRow
+from kenar.widgets.score_row import ScoreRow
+from kenar.widgets.selector_row import SelectorRow
+from kenar.widgets.subtitle_row import SubtitleRow
+from kenar.widgets.title_row import TitleRow
+from kenar.widgets.wide_button_bar import WideButtonBar
 
 WidgetTypesUnion = Union[
     DescriptionRow,

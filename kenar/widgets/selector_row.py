@@ -2,9 +2,9 @@ from typing import Dict
 
 from pydantic import BaseModel
 
-from kenar.models.icons import Icon
-from kenar.models.widgets.action import get_action, get_link_from_action
-from kenar.models.widgets.base import BaseWidget
+from kenar.icons import Icon
+from kenar.widgets.action import get_action, get_link_from_action
+from kenar.widgets.base import BaseWidget
 
 
 class SelectorRow(BaseModel, BaseWidget):

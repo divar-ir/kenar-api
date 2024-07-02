@@ -3,7 +3,7 @@ from typing import Dict
 from pydantic import BaseModel, model_validator
 from typing_extensions import Self
 
-from kenar.models.widgets.base import BaseWidget
+from kenar.widgets.base import BaseWidget
 
 
 class DescriptionRow(BaseModel, BaseWidget):

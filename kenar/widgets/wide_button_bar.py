@@ -2,8 +2,8 @@ from typing import Dict
 
 from pydantic import BaseModel, model_serializer, model_validator
 
-from kenar.models.widgets.action import get_action, get_link_from_action
-from kenar.models.widgets.base import BaseWidget
+from kenar.widgets.action import get_action, get_link_from_action
+from kenar.widgets.base import BaseWidget
 
 
 class WideButtonBar(BaseModel, BaseWidget):

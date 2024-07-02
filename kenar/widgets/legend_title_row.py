@@ -3,8 +3,8 @@ from typing import List, Dict
 
 from pydantic import BaseModel, Field
 
-from kenar.models.icons import Icon
-from kenar.models.widgets.base import BaseWidget
+from kenar.icons import Icon
+from kenar.widgets.base import BaseWidget
 
 
 class LegendTitleRow(BaseModel, BaseWidget):

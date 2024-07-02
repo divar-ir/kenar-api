@@ -2,9 +2,9 @@ from typing import Dict
 
 from pydantic import BaseModel, field_validator
 
-from kenar.models.icons import Icon
-from kenar.models.widgets.base import BaseWidget
-from kenar.models.widgets.color import Color
+from kenar.icons import Icon
+from kenar.widgets.base import BaseWidget
+from kenar.widgets.color import Color
 
 
 class EvaluationRow(BaseModel, BaseWidget):

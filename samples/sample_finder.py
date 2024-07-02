@@ -1,4 +1,4 @@
-from kenar.models.finder import SearchPostRequest, GetUserRequest, GetUserPostsRequest, GetPostRequest
+from kenar.finder import SearchPostRequest, GetUserRequest, GetUserPostsRequest, GetPostRequest
 from samples.sample_app import app
 
 if __name__ == '__main__':

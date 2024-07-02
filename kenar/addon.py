@@ -4,7 +4,7 @@ from typing import List, Optional, Dict
 from pydantic import BaseModel, model_serializer, field_serializer, field_validator
 from pydantic.v1 import root_validator
 
-from kenar.models.widgets.widget_type import get_widget_class, WidgetTypesUnion
+from kenar.widgets.widget_type import get_widget_class, WidgetTypesUnion
 
 
 class CreatePostAddonRequest(BaseModel):
