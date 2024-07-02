@@ -3,17 +3,17 @@ import os
 
 from dotenv import load_dotenv
 
-from kenar import AppConfig, KenarApp
+from kenar import ClientConfig, Client
 
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 
-app_conf = AppConfig(
+client_conf = ClientConfig(
     app_slug=os.environ.get("KENAR_APP_SLUG"),
     api_key=os.environ.get("KENAR_API_KEY"),
     oauth_secret=os.environ.get("KENAR_OAUTH_SECRET"),
     oauth_redirect_url=os.environ.get("KENAR_OAUTH_REDIRECT_URL"),
 )
 
-app = KenarApp(app_conf)
+app = Client(client_conf)

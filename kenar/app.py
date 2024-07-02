@@ -44,7 +44,7 @@ from kenar.request import retry
 ACCESS_TOKEN_HEADER_NAME = "x-access-token"
 
 
-class AppConfig(BaseModel):
+class ClientConfig(BaseModel):
     app_slug: str
     api_key: str
     oauth_secret: str
@@ -342,8 +342,8 @@ class OAuthService:
         ).decode("utf-8")
 
 
-class KenarApp:
-    def __init__(self, conf: AppConfig):
+class Client:
+    def __init__(self, conf: ClientConfig):
         if not conf.api_key:
             raise ValueError("the KENAR_API_KEY environment variable must be set")
         if not conf.app_slug:
