@@ -22,17 +22,17 @@ class SelectorRow(BaseModel, BaseWidget):
     def serialize_model(self) -> dict:
         return {
             "widget_type": "SELECTOR_ROW",
-            "data": {"@type": "type.googleapis.com/widgets.SelectorRowData"} |
-                    self.dict(exclude={'link'}) |
-                    {"small": True} |
-                    get_action(link=self.link)
+            "data": {"@type": "type.googleapis.com/widgets.SelectorRowData"}
+            | self.dict(exclude={"link"})
+            | {"small": True}
+            | get_action(link=self.link),
         }
 
     @classmethod
     def deserialize_model(cls, data: Dict):
-        widget_data = data.get('data', {})
-        widget_data.pop('@type', None)
-        if 'action' in widget_data:
-            widget_data['link'] = get_link_from_action(widget_data['action'])
-            widget_data.pop('action', None)
+        widget_data = data.get("data", {})
+        widget_data.pop("@type", None)
+        if "action" in widget_data:
+            widget_data["link"] = get_link_from_action(widget_data["action"])
+            widget_data.pop("action", None)
         return cls.parse_obj(widget_data)

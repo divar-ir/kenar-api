@@ -20,11 +20,11 @@ class GetPostRequest(BaseModel):
 
 
 class PostExtState(str, Enum):
-    UNKNOWN = 'UNKNOWN'
-    PUBLISHED = 'PUBLISHED'
-    REVIEW_REQ = 'REVIEW_REQ'
-    PAYMENT_REQ = 'PAYMENT_REQ'
-    RETIRED = 'RETIRED'
+    UNKNOWN = "UNKNOWN"
+    PUBLISHED = "PUBLISHED"
+    REVIEW_REQ = "REVIEW_REQ"
+    PAYMENT_REQ = "PAYMENT_REQ"
+    RETIRED = "RETIRED"
 
 
 class GetPostResponse(BaseModel):
