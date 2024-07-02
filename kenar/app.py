@@ -6,7 +6,8 @@ from typing import List, Optional
 import httpx
 from pydantic import BaseModel
 
-from kenar import Scope, SendChatMessageResourceIdParams
+from kenar.oauth import Scope, SendChatMessageResourceIdParams
+
 from kenar.addon import (
     CreateUserAddonRequest,
     CreateUserAddonResponse,
