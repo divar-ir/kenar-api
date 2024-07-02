@@ -13,14 +13,14 @@ class WideButtonBar(BaseModel, BaseWidget):
 
         @model_serializer
         def ser_model(self) -> dict:
-            return {'title': self.title} | get_action(link=self.link)
+            return {"title": self.title} | get_action(link=self.link)
 
-        @model_validator(mode='before')
+        @model_validator(mode="before")
         @classmethod
         def deserialize_button(cls, data: Dict) -> Dict:
-            if 'action' in data:
-                data['link'] = get_link_from_action(data.get('action', {}))
-                data.pop('action', None)
+            if "action" in data:
+                data["link"] = get_link_from_action(data.get("action", {}))
+                data.pop("action", None)
             return data
 
     button: Button
@@ -28,12 +28,13 @@ class WideButtonBar(BaseModel, BaseWidget):
     def serialize_model(self) -> dict:
         return {
             "widget_type": "WIDE_BUTTON_BAR",
-            "data": {"@type": "type.googleapis.com/widgets.WideButtonBarWidgetData"} |
-                    self.dict(exclude={'style'}) | {'style': 'SECONDARY'}
+            "data": {"@type": "type.googleapis.com/widgets.WideButtonBarWidgetData"}
+            | self.dict(exclude={"style"})
+            | {"style": "SECONDARY"},
         }
 
     @classmethod
     def deserialize_model(cls, data: Dict):
-        widget_data = data.get('data', {})
-        widget_data.pop('@type', None)
+        widget_data = data.get("data", {})
+        widget_data.pop("@type", None)
         return cls.parse_obj(widget_data)

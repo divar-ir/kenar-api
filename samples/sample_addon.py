@@ -1,13 +1,12 @@
-from kenar.addon import (
+from kenar import (
     CreatePostAddonRequest,
     GetUserAddonsRequest,
     DeleteUserAddonRequest,
     GetPostAddonsRequest,
     DeletePostAddonRequest,
     CreateUserAddonRequest,
-)
-from kenar.icons import IconName, Icon
-from kenar.widgets import (
+    IconName,
+    Icon,
     TitleRow,
     SubtitleRow,
     SelectorRow,
@@ -145,7 +144,7 @@ if __name__ == "__main__":
     resp = app.addon.create_post_addon(
         access_token="ACCESS_TOKEN_HERE",
         data=CreatePostAddonRequest(
-            token="gZW5uQcs",
+            token="POST_TOKEN_HERE",
             widgets=[
                 title_row,
                 subtitle_row,
@@ -160,13 +159,15 @@ if __name__ == "__main__":
     )
     print(resp)
 
-    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token="gZW5uQcs"))
+    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token="POST_TOKEN_HERE"))
     print(resp)
 
-    resp = app.addon.delete_post_addon(data=DeletePostAddonRequest(token="gZW5uQcs"))
+    resp = app.addon.delete_post_addon(
+        data=DeletePostAddonRequest(token="POST_TOKEN_HERE")
+    )
     print(resp)
 
-    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token="gZW5uQcs"))
+    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token="POST_TOKEN_HERE"))
     print(resp)
 
     resp = app.addon.create_user_addon(
