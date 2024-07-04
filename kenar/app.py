@@ -1,12 +1,10 @@
 import base64
 import urllib.parse
 from importlib.metadata import version
-from typing import List, Optional
+from typing import List, Optional, Literal
 
 import httpx
 from pydantic import BaseModel
-
-from kenar.oauth import Scope, SendChatMessageResourceIdParams
 
 from kenar.addon import (
     CreateUserAddonRequest,
@@ -20,6 +18,16 @@ from kenar.addon import (
     GetPostAddonsRequest,
     GetPostAddonsResponse,
     DeletePostAddonResponse,
+)
+from kenar.asset import (
+    GetCategoriesResponse,
+    GetCitiesResponse,
+    GetDistrictsResponse,
+    GetBrandModelsResponse,
+    GetMobileInternalStoragesResponse,
+    GetMobileRamMemoriesResponse,
+    GetLightBodyStatusResponse,
+    GetColorsResponse,
 )
 from kenar.chatmessage import (
     SetNotifyChatPostConversationsRequest,
@@ -39,6 +47,7 @@ from kenar.finder import (
 )
 from kenar.image import UploadImageResponse
 from kenar.oauth import OAuthAccessTokenRequest, AccessTokenResponse
+from kenar.oauth import Scope, SendChatMessageResourceIdParams
 from kenar.request import retry
 
 ACCESS_TOKEN_HEADER_NAME = "x-access-token"
@@ -289,6 +298,149 @@ class AddonService:
         return GetPostAddonsResponse(**rsp.json())
 
 
+class AssetService:
+    def __init__(self, client):
+        self._client = client
+
+    def get_categories(
+        self,
+        max_retry=3,
+        retry_delay=1,
+    ) -> GetCategoriesResponse:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            return self._client.request(
+                method="GET",
+                url="https://api.divar.ir/v1/open-platform/assets/category",
+            )
+
+        rsp = send_request()
+        return GetCategoriesResponse(**rsp.json())
+
+    def get_cities(
+        self,
+        max_retry=3,
+        retry_delay=1,
+    ) -> GetCitiesResponse:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            return self._client.request(
+                method="GET",
+                url="https://api.divar.ir/v1/open-platform/assets/city",
+            )
+
+        rsp = send_request()
+        return GetCitiesResponse(**rsp.json())
+
+    def get_districts(
+        self,
+        max_retry=3,
+        retry_delay=1,
+    ) -> GetDistrictsResponse:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            return self._client.request(
+                method="GET",
+                url="https://api.divar.ir/v1/open-platform/assets/district",
+            )
+
+        rsp = send_request()
+        return GetDistrictsResponse(**rsp.json())
+
+    def get_city_districts(
+        self,
+        city: str,
+        max_retry=3,
+        retry_delay=1,
+    ) -> GetDistrictsResponse:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            return self._client.request(
+                method="GET",
+                url=f"https://api.divar.ir/v1/open-platform/assets/district/{city}",
+            )
+
+        rsp = send_request()
+        return GetDistrictsResponse(**rsp.json())
+
+    def get_brand_models(
+        self,
+        category: Literal["light", "mobile-phones"],
+        max_retry=3,
+        retry_delay=1,
+    ) -> GetBrandModelsResponse:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            return self._client.request(
+                method="GET",
+                url=f"https://api.divar.ir/v1/open-platform/assets/brand-model/{category}",
+            )
+
+        rsp = send_request()
+        return GetBrandModelsResponse(**rsp.json())
+
+    def get_colors(
+        self,
+        category: Literal["light", "mobile-phones"],
+        max_retry=3,
+        retry_delay=1,
+    ) -> GetColorsResponse:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            return self._client.request(
+                method="GET",
+                url=f"https://api.divar.ir/v1/open-platform/assets/color/{category}",
+            )
+
+        rsp = send_request()
+        return GetColorsResponse(**rsp.json())
+
+    def get_mobile_internal_storages(
+        self,
+        max_retry=3,
+        retry_delay=1,
+    ) -> GetMobileInternalStoragesResponse:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            return self._client.request(
+                method="GET",
+                url="https://api.divar.ir/v1/open-platform/assets/internal-storage",
+            )
+
+        rsp = send_request()
+        return GetMobileInternalStoragesResponse(**rsp.json())
+
+    def get_mobile_ram_memories(
+        self,
+        max_retry=3,
+        retry_delay=1,
+    ) -> GetMobileRamMemoriesResponse:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            return self._client.request(
+                method="GET",
+                url="https://api.divar.ir/v1/open-platform/assets/ram-memory",
+            )
+
+        rsp = send_request()
+        return GetMobileRamMemoriesResponse(**rsp.json())
+
+    def get_light_body_status(
+        self,
+        max_retry=3,
+        retry_delay=1,
+    ) -> GetLightBodyStatusResponse:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            return self._client.request(
+                method="GET",
+                url="https://api.divar.ir/v1/open-platform/assets/body-status",
+            )
+
+        rsp = send_request()
+        return GetLightBodyStatusResponse(**rsp.json())
+
+
 class OAuthService:
     def __init__(self, client, app_slug, oauth_redirect_url, oauth_secret):
         self._app_slug = app_slug
@@ -375,6 +527,7 @@ class Client:
         self._finder = FinderService(self._client)
         self._chat = ChatService(self._client)
         self._addon = AddonService(self._client)
+        self._asset = AssetService(self._client)
 
     @property
     def chat(self):
@@ -415,3 +568,13 @@ class Client:
         if not isinstance(service, OAuthService):
             raise ValueError("addon must be an instance of OAuthService")
         self._oauth = service
+
+    @property
+    def asset(self):
+        return self._asset
+
+    @asset.setter
+    def asset(self, service: AssetService):
+        if not isinstance(service, AssetService):
+            raise ValueError("addon must be an instance of AssetService")
+        self._asset = service
