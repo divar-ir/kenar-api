@@ -12,7 +12,7 @@ class SearchPostRequest(BaseModel):
 
 
 class SearchPostResponse(BaseModel):
-    posts: List[dict]
+    posts: List[dict] = None
 
 
 class GetPostRequest(BaseModel):
