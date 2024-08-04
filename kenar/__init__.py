@@ -6,3 +6,4 @@ from .icons import *
 from .image import *
 from .oauth import *
 from .widgets import *
+from .asset import *
