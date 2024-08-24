@@ -1,9 +1,5 @@
 from kenar import (
     CreatePostAddonRequest,
-    GetUserAddonsRequest,
-    DeleteUserAddonRequest,
-    GetPostAddonsRequest,
-    DeletePostAddonRequest,
     CreateUserAddonRequest,
     IconName,
     Icon,
@@ -23,10 +19,6 @@ from kenar import (
 from samples.sample_app import app
 
 if __name__ == "__main__":
-    rsp = app.addon.upload_image("PATH_TO_FILE")
-    print(rsp.image_name)
-    image_name = rsp.image_name
-
     # create widgets for addon
     title_row = TitleRow(
         text="این یک نمونه تایتل میباشد", text_color=Color.TEXT_SECONDARY
@@ -68,7 +60,6 @@ if __name__ == "__main__":
         title="تایتل",
         subtitle="سابتایتل",
         has_indicator=False,
-        image_url=image_name,
         label="لیبل",
         has_divider=True,
         link="https://www.test.com",
@@ -155,19 +146,18 @@ if __name__ == "__main__":
                 selector_row,
                 wide_button_bar,
             ],
+            notes="",
         ),
     )
     print(resp)
 
-    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token="POST_TOKEN_HERE"))
+    resp = app.addon.get_post_addons(token="POST_TOKEN_HERE")
     print(resp)
 
-    resp = app.addon.delete_post_addon(
-        data=DeletePostAddonRequest(token="POST_TOKEN_HERE")
-    )
+    resp = app.addon.delete_post_addon(token="POST_TOKEN_HERE")
     print(resp)
 
-    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token="POST_TOKEN_HERE"))
+    resp = app.addon.get_post_addons(token="POST_TOKEN_HERE")
     print(resp)
 
     resp = app.addon.create_user_addon(
@@ -182,11 +172,11 @@ if __name__ == "__main__":
     print(resp)
     user_addon_id = resp.id
 
-    resp = app.addon.get_user_addons(data=GetUserAddonsRequest(phone="USER_PHONE_HERE"))
+    resp = app.addon.get_user_addons(phone="USER_PHONE_HERE")
     print(resp)
 
-    resp = app.addon.delete_user_addon(data=DeleteUserAddonRequest(id=user_addon_id))
+    resp = app.addon.delete_user_addon(addon_id=user_addon_id)
     print(resp)
 
-    resp = app.addon.get_user_addons(data=GetUserAddonsRequest(phone="USER_PHONE_HERE"))
+    resp = app.addon.get_user_addons(phone="USER_PHONE_HERE")
     print(resp)
