@@ -15,7 +15,7 @@ class OauthResourceType(str, Enum):
     CHAT_POST_CONVERSATIONS_READ = "CHAT_POST_CONVERSATIONS_READ"
     CHAT_POST_CONVERSATIONS_MESSAGE_SEND = "CHAT_POST_CONVERSATIONS_MESSAGE_SEND"
     USER_VERIFICATION_CREATE = "USER_VERIFICATION_CREATE"
-    OFFLINE_ACCESS = "OFFLINE_ACCESS"
+    OFFLINE_ACCESS = "offline_access"
 
     MANAGEMENT_APPS_READ = "MANAGEMENT_APPS_READ"
     MANAGEMENT_APPS_WRITE = "MANAGEMENT_APPS_WRITE"
@@ -25,6 +25,7 @@ class OauthResourceType(str, Enum):
 
 class AccessTokenResponse(BaseModel):
     access_token: str
+    refresh_token: Optional[str] = None
     token_type: str
     expires_in: int
     scope: str
