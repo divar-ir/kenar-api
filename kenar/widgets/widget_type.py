@@ -4,6 +4,7 @@ from kenar.widgets.description_row import DescriptionRow
 from kenar.widgets.evaluation_row import EvaluationRow
 from kenar.widgets.event_row import EventRow
 from kenar.widgets.group_info_row import GroupInfo
+from kenar.widgets.image_carousel_row import ImageCarouselRow
 from kenar.widgets.legend_title_row import LegendTitleRow
 from kenar.widgets.score_row import ScoreRow
 from kenar.widgets.selector_row import SelectorRow
@@ -16,6 +17,7 @@ WidgetTypesUnion = Union[
     EvaluationRow,
     EventRow,
     GroupInfo,
+    ImageCarouselRow,
     LegendTitleRow,
     ScoreRow,
     SelectorRow,
@@ -37,6 +39,7 @@ def get_widget_class(widget_type: str) -> Optional[Type[WidgetTypesUnion]]:
         "SUBTITLE_ROW": SubtitleRow,
         "TITLE_ROW": TitleRow,
         "WIDE_BUTTON_BAR": WideButtonBar,
+        "IMAGE_CAROUSEL_ROW": ImageCarouselRow,
     }
     widget_class = widget_type_to_class.get(widget_type)
     if not widget_class:
