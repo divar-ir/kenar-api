@@ -1,177 +1,156 @@
-from enum import Enum
 from typing import List, Optional, Dict
 
-from pydantic import BaseModel, model_serializer, field_serializer, field_validator
-from pydantic.v1 import root_validator
-
-from kenar.widgets.widget_type import get_widget_class, WidgetTypesUnion
+from kenar.widgets.widget_type import WidgetTypesUnion
 
 
-class CreatePostAddonRequest(BaseModel):
+class CreatePostAddonRequest:
     token: str
 
     widgets: List[WidgetTypesUnion]
-    notes: str = ""
-    semantic: Dict[str, str] = {}
-    semantic_sensitives: List[str] = []
+    notes: str
 
-    @field_serializer("widgets")
-    def serialize_widgets(self, widgets, _info):
-        return {"widget_list": [w.serialize_model() for w in widgets]}
+    semantic: Optional[Dict[str, str]] = dict
+    semantic_sensitives: Optional[List[str]] = list
+
+    def __init__(self, token: str, widgets: List[WidgetTypesUnion], notes: str = ""):
+        self.token = token
+        self.widgets = widgets
+        self.notes = notes
+        self.semantic = {}
+        self.semantic_sensitives = []
+
+    def add_semantic(self, key: str, value: str, sensitive: bool = False):
+        if key in self.semantic:
+            raise ValueError(f"Key {key} already exists in semantic.")
+
+        self.semantic[key] = value
+        if sensitive:
+            self.semantic_sensitives.append(key)
+
+    def to_dict(self):
+        return {
+            "token": self.token,
+            "notes": self.notes,
+            "widgets": {
+                "widget_list": [w.serialize_model() for w in self.widgets],
+            },
+            "semantic": self.semantic,
+            "semantic_sensitives": self.semantic_sensitives,
+        }
 
 
-class CreatePostAddonResponse(BaseModel):
-    pass
-
-
-class DeletePostAddonRequest(BaseModel):
-    token: str
-
-
-class DeletePostAddonResponse(BaseModel):
-    pass
-
-
-class Status(BaseModel):
-    class Status(str, Enum):
-        ACTIVE = "ACTIVE"
-        INACTIVE = "INACTIVE"
-        SUSPENDED = "SUSPENDED"
-        DEVELOPMENT = "DEVELOPMENT"
-
-    status: Status
-
-
-class App(BaseModel):
+class App:
     slug: str
-    display: str = None
-    avatar: str = None
-    status: Status = None
+    display: str
+    avatar: str
+    status: str
     service_type: str
 
+    def __init__(self, slug: str, display: str = "", avatar: str = "", status: str = "", service_type: str = "", **_):
+        self.slug = slug
+        self.display = display
+        self.avatar = avatar
+        self.status = status
+        self.service_type = service_type
 
-class AddonMetaData(BaseModel):
+
+class AddonMetaData:
     id: str
     app: App
 
     created_at: str
     last_modified: str
-    status: str
+
+    def __init__(self, id: str, app: Dict, created_at: str, last_modified: str, **_):
+        self.id = id
+        self.app = App(**app)
+        self.created_at = created_at
+        self.last_modified = last_modified
 
 
-class PostAddon(BaseModel):
+class PostAddon:
     meta_data: AddonMetaData
-
     token: str
+    widgets: List[WidgetTypesUnion]
+    semantic: Dict[str, str]
 
-    widgets: List[WidgetTypesUnion] = None
-
-    score: int
-
-    semantic: Dict[str, str] = None
-    semantic_sensitives: List[str] = None
-
-    @field_validator("widgets", mode="before")
-    @classmethod
-    def deserialize_model(cls, widgets: Dict):
-        widget_list = widgets.get("widget_list", [])
-        return [
-            get_widget_class(w["widget_type"]).deserialize_model(w) for w in widget_list
-        ]
-
-    @field_serializer("widgets")
-    def serialize_widgets(self, widgets, _info):
-        if widgets:
-            p = [w.serialize_model() for w in widgets]
-            return {"widget_list": p}
-        return None
+    def __init__(
+            self,
+            meta_data: Dict,
+            token: str,
+            widgets: List[WidgetTypesUnion],
+            semantic: Dict[str, str],
+            **_,
+    ):
+        self.meta_data = AddonMetaData(**meta_data)
+        self.token = token
+        self.widgets = widgets
+        self.semantic = semantic
 
 
-class GetPostAddonsRequest(BaseModel):
-    id: str = None
-    token: str = None
-
-    @root_validator(pre=True)
-    def check_mutually_exclusive(self, values):
-        id_, token_ = values.get("id"), values.get("token")
-        if id_ and token_:
-            raise ValueError("id and token are mutually exclusive.")
-        if not id_ and not token_:
-            raise ValueError("One of id or token must be set.")
-        return values
-
-    @model_serializer
-    def ser_model(self) -> dict:
-        return {"id": self.id} if self.id is not None else {"token": self.token}
-
-
-class GetPostAddonsResponse(BaseModel):
-    addons: List[PostAddon] = None
-
-
-class CreateUserAddonRequest(BaseModel):
+class CreateUserAddonRequest:
     widgets: List[WidgetTypesUnion]
 
-    semantic: Dict[str, str] = {}
-    semantic_sensitives: List[str] = []
-    notes: str = ""
+    semantic: Dict[str, str]
+    semantic_sensitives: List[str]
+    notes: str
     phone: str
-    management_permalink: str = ""
-    removal_permalink: str = ""
+    management_permalink: str
+    removal_permalink: str
     categories: List[str]
-    ticket_uuid: Optional[str] = None
-    verification_cost: Optional[int] = None
+    ticket_uuid: Optional[str]
+    verification_cost: Optional[int]
 
-    @field_serializer("widgets")
-    def serialize_widgets(self, widgets, _info):
-        p = [w.serialize_model() for w in widgets]
-        return {"widget_list": p}
+    def __init__(
+            self,
+            phone: str,
+            widgets: List[WidgetTypesUnion],
+            notes: str = "",
+            categories: List[str] = None,
+            ticket_uuid: Optional[str] = "",
+            verification_cost: Optional[int] = 0,
+    ):
+        self.phone = phone
+        self.widgets = widgets
+        self.notes = notes
+        self.categories = categories or []
+        self.semantic = {}
+        self.semantic_sensitives = []
+        self.ticket_uuid = ticket_uuid
+        self.verification_cost = verification_cost
+
+    def add_semantic(self, key: str, value: str, sensitive: bool = False):
+        if key in self.semantic:
+            raise ValueError(f"Key {key} already exists in semantic.")
+
+        self.semantic[key] = value
+        if sensitive:
+            self.semantic_sensitives.append(key)
+
+    def to_dict(self):
+        return {
+            "widget_list": [w.serialize_model() for w in self.widgets],
+            "semantic": self.semantic,
+            "semantic_sensitives": self.semantic_sensitives,
+            "notes": self.notes,
+            "phone": self.phone,
+            "management_permalink": self.management_permalink,
+            "removal_permalink": self.removal_permalink,
+            "categories": self.categories,
+            "ticket_uuid": self.ticket_uuid,
+            "verification_cost": self.verification_cost,
+        }
 
 
-class CreateUserAddonResponse(BaseModel):
-    id: str
-
-
-class DeleteUserAddonRequest(BaseModel):
-    id: str
-
-
-class DeleteUserAddonResponse(BaseModel):
-    pass
-
-
-class GetUserAddonsRequest(BaseModel):
-    phone: str
-
-
-class UserAddonFilters(BaseModel):
-    categories: List[str]
-
-
-class UserAddon(BaseModel):
+class UserAddon:
     meta_data: AddonMetaData
     phone: str
     widgets: List[WidgetTypesUnion] = None
 
     semantic: Dict[str, str] = {}
 
-    filters: UserAddonFilters
-
-    @field_validator("widgets", mode="before")
-    @classmethod
-    def deserialize_model(cls, widgets: Dict):
-        widget_list = widgets.get("widget_list", [])
-        return [
-            get_widget_class(w["widget_type"]).deserialize_model(w) for w in widget_list
-        ]
-
-    @field_serializer("widgets")
-    def serialize_widgets(self, widgets, _info):
-        if widgets:
-            p = [w.serialize_model() for w in widgets]
-            return {"widget_list": p}
-        return None
-
-
-class GetUserAddonsResponse(BaseModel):
-    addons: List[UserAddon] = None
+    def __init__(self, meta_data: Dict, phone: str, widgets: List[WidgetTypesUnion], semantic: Dict[str, str], **_):
+        self.meta_data = AddonMetaData(**meta_data)
+        self.phone = phone
+        self.widgets = widgets
+        self.semantic = semantic
