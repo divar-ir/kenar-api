@@ -22,12 +22,10 @@ class GroupInfo(BaseModel, BaseWidget):
 
     def serialize_model(self) -> dict:
         return {
-            "widget_type": "GROUP_INFO_ROW",
-            "data": {"@type": "type.googleapis.com/widgets.GroupInfoRow"} | self.dict(),
+            "group_info_row": self.model_dump(),
         }
 
     @classmethod
     def deserialize_model(cls, data: Dict):
-        widget_data = data.get("data", {})
-        widget_data.pop("@type", None)
+        widget_data = data.get("group_info_row", {})
         return cls.parse_obj(widget_data)

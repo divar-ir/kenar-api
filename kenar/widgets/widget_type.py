@@ -1,11 +1,11 @@
-from typing import Optional, Type, Union
+from typing import List, Type, Union
+
 
 from kenar.widgets.description_row import DescriptionRow
 from kenar.widgets.evaluation_row import EvaluationRow
 from kenar.widgets.event_row import EventRow
 from kenar.widgets.group_info_row import GroupInfo
 from kenar.widgets.image_carousel_row import ImageCarouselRow
-from kenar.widgets.legend_title_row import LegendTitleRow
 from kenar.widgets.score_row import ScoreRow
 from kenar.widgets.selector_row import SelectorRow
 from kenar.widgets.subtitle_row import SubtitleRow
@@ -18,7 +18,6 @@ WidgetTypesUnion = Union[
     EventRow,
     GroupInfo,
     ImageCarouselRow,
-    LegendTitleRow,
     ScoreRow,
     SelectorRow,
     SubtitleRow,
@@ -27,21 +26,21 @@ WidgetTypesUnion = Union[
 ]
 
 
-def get_widget_class(widget_type: str) -> Optional[Type[WidgetTypesUnion]]:
+def get_widget_class(keys: List[str]) -> Type[WidgetTypesUnion]:
     widget_type_to_class = {
-        "DESCRIPTION_ROW": DescriptionRow,
-        "EVALUATION_ROW": EvaluationRow,
-        "EVENT_ROW": EventRow,
-        "GROUP_INFO_ROW": GroupInfo,
-        "LEGEND_TITLE_ROW": LegendTitleRow,
-        "SCORE_ROW": ScoreRow,
-        "SELECTOR_ROW": SelectorRow,
-        "SUBTITLE_ROW": SubtitleRow,
-        "TITLE_ROW": TitleRow,
-        "WIDE_BUTTON_BAR": WideButtonBar,
-        "IMAGE_CAROUSEL_ROW": ImageCarouselRow,
+        "description_row": DescriptionRow,
+        "evaluation_row": EvaluationRow,
+        "event_row": EventRow,
+        "group_info_row": GroupInfo,
+        "score_row": ScoreRow,
+        "selector_row": SelectorRow,
+        "subtitle_row": SubtitleRow,
+        "title_row": TitleRow,
+        "button_bar": WideButtonBar,
+        "image_carousel_row": ImageCarouselRow,
     }
-    widget_class = widget_type_to_class.get(widget_type)
-    if not widget_class:
-        raise ValueError(f"Unsupported widget_type {widget_type}")
-    return widget_class
+
+    for  k in keys:
+        if k in widget_type_to_class:
+            return widget_type_to_class[k]
+    raise ValueError("Unsupported widget")

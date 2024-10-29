@@ -1,11 +1,7 @@
 import logging
 import os
 
-from dotenv import load_dotenv
-
 from kenar import ClientConfig, Client
-
-load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 

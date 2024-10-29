@@ -11,13 +11,10 @@ class SubtitleRow(BaseModel, BaseWidget):
 
     def serialize_model(self) -> dict:
         return {
-            "widget_type": "SUBTITLE_ROW",
-            "data": {"@type": "type.googleapis.com/widgets.SubtitleRowData"}
-            | self.dict(),
+            "subtitle_row": self.model_dump()
         }
 
     @classmethod
     def deserialize_model(cls, data: Dict):
-        widget_data = data.get("data", {})
-        widget_data.pop("@type", None)
-        return cls.parse_obj(widget_data)
+        widget_data = data.get("subtitle_row", {})
+        return cls.model_validate(widget_data)
