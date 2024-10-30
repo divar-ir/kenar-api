@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum
 
 from pydantic import BaseModel
@@ -349,5 +350,11 @@ class IconName(str, Enum):
     WALLET = "WALLET"
 
 
-class Icon(BaseModel):
+@dataclass
+class Icon:
     icon_name: IconName
+
+    def serialize(self):
+        return {
+            "icon_name": self.icon_name
+        }
