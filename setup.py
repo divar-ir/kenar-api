@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name='Kenar',
-    version='0.5.9',
-    author='Nastaran Alipour',
-    author_email='nastaran.alipour78@gmail.com',
+    version='0.6.0',
+    author='Kenar',
+    author_email='kenar@divar.ir',
     description='facilitate using kenar divar APIs',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',

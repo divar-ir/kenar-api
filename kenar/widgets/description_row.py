@@ -9,7 +9,7 @@ from kenar.widgets.base import BaseWidget
 class DescriptionRow(BaseModel, BaseWidget):
     text: str
     has_divider: bool = False
-    is_primary: bool
+    is_primary: bool = False
     expandable: bool = False
     padded: bool = False
     preview_max_line: int = 0
@@ -26,13 +26,10 @@ class DescriptionRow(BaseModel, BaseWidget):
 
     def serialize_model(self) -> dict:
         return {
-            "widget_type": "DESCRIPTION_ROW",
-            "data": {"@type": "type.googleapis.com/widgets.DescriptionRowData"}
-            | self.model_dump(),
+            "description_row": self.model_dump(exclude={"is_primary", "padded"}),
         }
 
     @classmethod
     def deserialize_model(cls, data: Dict):
-        widget_data = data.get("data", {})
-        widget_data.pop("@type", None)
-        return cls.parse_obj(widget_data)
+        widget_data = data.get("description_row", {})
+        return cls.model_validate(widget_data)

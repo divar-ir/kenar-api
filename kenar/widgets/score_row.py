@@ -6,7 +6,7 @@ from typing_extensions import Self
 from kenar.widgets.base import BaseWidget
 from kenar.widgets.color import Color
 from kenar.widgets.action import get_action, get_link_from_action
-from kenar.icons import Icon
+from kenar.icons import Icon, IconName
 
 
 class ScoreRow(BaseModel, BaseWidget):
@@ -18,7 +18,7 @@ class ScoreRow(BaseModel, BaseWidget):
     score_color: Color
     link: str
     has_divider: bool = False
-    icon: Icon = None
+    icon: Icon = Icon(icon_name=IconName.UNKNOWN)
 
     @model_validator(mode="after")
     def check_score(self) -> Self:
@@ -33,17 +33,20 @@ class ScoreRow(BaseModel, BaseWidget):
 
     def serialize_model(self) -> dict:
         return {
-            "widget_type": "SCORE_ROW",
-            "data": {"@type": "type.googleapis.com/widgets.ScoreRowData"}
-            | self.dict(exclude={"link"})
+            "score_row": self.model_dump(exclude={"link", "icon"})
+            | self.icon.model_dump()
             | get_action(link=self.link),
         }
 
     @classmethod
     def deserialize_model(cls, data: Dict):
-        widget_data = data.get("data", {})
-        widget_data.pop("@type", None)
+        widget_data = data.get("score_row", {})
         if "action" in widget_data:
             widget_data["link"] = get_link_from_action(widget_data["action"])
             widget_data.pop("action", None)
-        return cls.parse_obj(widget_data)
+
+        widget_data["icon"] = {
+                "icon_name": widget_data.pop("icon_name", "UNKNOWN")
+        }
+
+        return cls.model_validate(widget_data)

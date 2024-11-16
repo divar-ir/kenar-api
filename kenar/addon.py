@@ -1,4 +1,5 @@
 from enum import Enum
+from logging import log
 from typing import List, Optional, Dict
 
 from pydantic import BaseModel, model_serializer, field_serializer, field_validator
@@ -17,7 +18,7 @@ class CreatePostAddonRequest(BaseModel):
 
     @field_serializer("widgets")
     def serialize_widgets(self, widgets, _info):
-        return {"widget_list": [w.serialize_model() for w in widgets]}
+        return  [w.serialize_model() for w in widgets]
 
 
 class CreatePostAddonResponse(BaseModel):
@@ -47,7 +48,7 @@ class App(BaseModel):
     display: str = None
     avatar: str = None
     status: Status = None
-    service_type: str
+    service_type: str = None
 
 
 class AddonMetaData(BaseModel):
@@ -64,27 +65,16 @@ class PostAddon(BaseModel):
 
     token: str
 
-    widgets: List[WidgetTypesUnion] = None
-
     score: int
 
     semantic: Dict[str, str] = None
     semantic_sensitives: List[str] = None
 
-    @field_validator("widgets", mode="before")
-    @classmethod
-    def deserialize_model(cls, widgets: Dict):
-        widget_list = widgets.get("widget_list", [])
-        return [
-            get_widget_class(w["widget_type"]).deserialize_model(w) for w in widget_list
-        ]
+    class Config:
+        exclude= {"semantic_sensitives"}
 
-    @field_serializer("widgets")
-    def serialize_widgets(self, widgets, _info):
-        if widgets:
-            p = [w.serialize_model() for w in widgets]
-            return {"widget_list": p}
-        return None
+
+   
 
 
 class GetPostAddonsRequest(BaseModel):
@@ -121,11 +111,23 @@ class CreateUserAddonRequest(BaseModel):
     categories: List[str]
     ticket_uuid: Optional[str] = None
     verification_cost: Optional[int] = None
+    cost: Optional[int] = None
+
+    @field_validator("cost", mode="before")
+    @classmethod
+    def set_cost_from_verification(cls, cost: Optional[int], values):
+        if cost is None and values.get("verification_cost") is not None:
+            return values.get("verification_cost")
+        return cost
+
+    class Config:
+        exclude = {"verification_cost", "management_permalink", 
+                   "notes", "removal_permalink", "semantic_sensitives"}
 
     @field_serializer("widgets")
     def serialize_widgets(self, widgets, _info):
         p = [w.serialize_model() for w in widgets]
-        return {"widget_list": p}
+        return p
 
 
 class CreateUserAddonResponse(BaseModel):
@@ -160,16 +162,15 @@ class UserAddon(BaseModel):
     @field_validator("widgets", mode="before")
     @classmethod
     def deserialize_model(cls, widgets: Dict):
-        widget_list = widgets.get("widget_list", [])
         return [
-            get_widget_class(w["widget_type"]).deserialize_model(w) for w in widget_list
+            get_widget_class(w.keys()).deserialize_model(w) for w in widgets
         ]
 
     @field_serializer("widgets")
     def serialize_widgets(self, widgets, _info):
         if widgets:
             p = [w.serialize_model() for w in widgets]
-            return {"widget_list": p}
+            return p
         return None
 
 

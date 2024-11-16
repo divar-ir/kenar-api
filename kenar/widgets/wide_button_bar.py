@@ -27,14 +27,12 @@ class WideButtonBar(BaseModel, BaseWidget):
 
     def serialize_model(self) -> dict:
         return {
-            "widget_type": "WIDE_BUTTON_BAR",
-            "data": {"@type": "type.googleapis.com/widgets.WideButtonBarWidgetData"}
-            | self.dict(exclude={"style"})
-            | {"style": "SECONDARY"},
+            "button_bar": self.button.model_dump(),
         }
 
     @classmethod
     def deserialize_model(cls, data: Dict):
-        widget_data = data.get("data", {})
-        widget_data.pop("@type", None)
-        return cls.parse_obj(widget_data)
+        widget_data = data.get("button_bar", {})
+        return cls.model_validate({
+            "button": widget_data,
+        })

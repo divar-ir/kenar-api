@@ -188,8 +188,8 @@ class AddonService:
         @retry(max_retries=max_retry, delay=retry_delay)
         def send_request():
             return self._client.post(
-                url=f"/v1/open-platform/addons/user/{data.phone}",
-                content=data.json(),
+                url=f"/v2/open-platform/addons/user/{data.phone}",
+                content=data.model_dump_json(),
                 headers={ACCESS_TOKEN_HEADER_NAME: access_token},
             )
 
@@ -222,7 +222,7 @@ class AddonService:
         def send_request():
             return self._client.get(
                 url=f"/v1/open-platform/addons/user/{data.phone}",
-                params=data.json(),
+                params=data.model_dump_json(),
             )
 
         rsp = send_request()
@@ -238,8 +238,8 @@ class AddonService:
         @retry(max_retries=max_retry, delay=retry_delay)
         def send_request():
             return self._client.post(
-                url=f"/v1/open-platform/addons/post/{data.token}",
-                content=data.json(),
+                url=f"/v2/open-platform/addons/post/{data.token}",
+                content=data.model_dump_json(exclude={"token"}),
                 headers={ACCESS_TOKEN_HEADER_NAME: access_token},
             )
 

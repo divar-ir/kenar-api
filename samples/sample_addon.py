@@ -11,7 +11,6 @@ from kenar import (
     SubtitleRow,
     SelectorRow,
     ScoreRow,
-    LegendTitleRow,
     GroupInfo,
     EventRow,
     EvaluationRow,
@@ -22,6 +21,12 @@ from kenar import (
 
 from samples.sample_app import app
 
+ACCESS_TOKEN = ""
+LINK = ""
+PHONE = ""
+POST_TOKEN = ""
+
+
 if __name__ == "__main__":
     rsp = app.addon.upload_image("PATH_TO_FILE")
     print(rsp.image_name)
@@ -29,7 +34,7 @@ if __name__ == "__main__":
 
     # create widgets for addon
     title_row = TitleRow(
-        text="این یک نمونه تایتل میباشد", text_color=Color.TEXT_SECONDARY
+        text="این یک نمونه تایتل میباشد", text_color=Color.COLOR_UNSPECIFIED
     )
 
     subtitle_row = SubtitleRow(text="این یک سابتایتل میباشد")
@@ -49,18 +54,18 @@ if __name__ == "__main__":
         indicator_color=Color.SUCCESS_PRIMARY,
         left=EvaluationRow.Section(
             text="سمت چپ",
-            text_color=Color.TEXT_SECONDARY,
+            text_color=Color.COLOR_UNSPECIFIED,
             section_color=Color.SUCCESS_PRIMARY,
         ),
         middle=EvaluationRow.Section(
             text="وسط",
-            text_color=Color.TEXT_SECONDARY,
-            section_color=Color.TEXT_PRIMARY,
+            text_color=Color.COLOR_UNSPECIFIED,
+            section_color=Color.WARNING_PRIMARY,
         ),
         right=EvaluationRow.Section(
             text="سمت راستی",
-            text_color=Color.TEXT_SECONDARY,
-            section_color=Color.TEXT_SECONDARY,
+            text_color=Color.COLOR_UNSPECIFIED,
+            section_color=Color.COLOR_UNSPECIFIED,
         ),
     )
 
@@ -71,7 +76,7 @@ if __name__ == "__main__":
         image_url=image_name,
         label="لیبل",
         has_divider=True,
-        link="https://www.test.com",
+        link=LINK,
         padded=True,
         icon=Icon(icon_name=IconName.ADD),
     )
@@ -85,34 +90,10 @@ if __name__ == "__main__":
         ],
     )
 
-    legend_title_row = LegendTitleRow(
-        title="ارائه خدمت با کنار دیوار",
-        subtitle="",
-        has_divider=True,
-        image_url="logo",
-        tags=[
-            LegendTitleRow.Tag(
-                text="احراز",
-                icon=Icon(icon_name=IconName.VERIFIED),
-                bg_color=LegendTitleRow.Tag.BackgroundColor.GRAY,
-            ),
-            LegendTitleRow.Tag(
-                text="کارشناسی",
-                icon=Icon(icon_name=IconName.CAR_INSPECTED),
-                bg_color=LegendTitleRow.Tag.BackgroundColor.TRANSPARENT,
-            ),
-            LegendTitleRow.Tag(
-                text="پرداخت امن",
-                icon=Icon(icon_name=IconName.ADD),
-                bg_color=LegendTitleRow.Tag.BackgroundColor.RED,
-            ),
-        ],
-    )
-
     score_row_1 = ScoreRow(
         title="مدل امتیاز کیفی",
         descriptive_score="بسیار عالی",
-        score_color=Color.TEXT_SECONDARY,
+        score_color=Color.COLOR_UNSPECIFIED,
         link="",
         has_divider=True,
         icon=Icon(icon_name=IconName.ADD),
@@ -121,7 +102,7 @@ if __name__ == "__main__":
     score_row_2 = ScoreRow(
         title="مدل امتیاز درصدی",
         percentage_score=100,
-        score_color=Color.TEXT_SECONDARY,
+        score_color=Color.COLOR_UNSPECIFIED,
         link="",
         has_divider=True,
         icon=Icon(icon_name=IconName.ADD),
@@ -132,19 +113,19 @@ if __name__ == "__main__":
         has_divider=True,
         has_arrow=True,
         icon=Icon(icon_name=IconName.INFO),
-        link="https://www.test.com",
+        link=LINK,
     )
 
     wide_button_bar = WideButtonBar(
         button=WideButtonBar.Button(
-            title="به سمت سایت شما", link="https://www.test.com"
+            title="به سمت سایت شما", link=LINK
         ),
     )
 
     resp = app.addon.create_post_addon(
-        access_token="ACCESS_TOKEN_HERE",
+        access_token=ACCESS_TOKEN,
         data=CreatePostAddonRequest(
-            token="POST_TOKEN_HERE",
+            token=POST_TOKEN,
             widgets=[
                 title_row,
                 subtitle_row,
@@ -159,21 +140,21 @@ if __name__ == "__main__":
     )
     print(resp)
 
-    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token="POST_TOKEN_HERE"))
+    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token=POST_TOKEN))
     print(resp)
 
     resp = app.addon.delete_post_addon(
-        data=DeletePostAddonRequest(token="POST_TOKEN_HERE")
+        data=DeletePostAddonRequest(token=POST_TOKEN)
     )
     print(resp)
 
-    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token="POST_TOKEN_HERE"))
+    resp = app.addon.get_post_addons(data=GetPostAddonsRequest(token=POST_TOKEN))
     print(resp)
 
     resp = app.addon.create_user_addon(
-        access_token="ACCESS_TOKEN_HERE",
+        access_token=ACCESS_TOKEN,
         data=CreateUserAddonRequest(
-            phone="USER_PHONE_HERE",
+            phone=PHONE,
             widgets=[desc_row],
             notes="test note",
             categories=[],
@@ -182,11 +163,11 @@ if __name__ == "__main__":
     print(resp)
     user_addon_id = resp.id
 
-    resp = app.addon.get_user_addons(data=GetUserAddonsRequest(phone="USER_PHONE_HERE"))
+    resp = app.addon.get_user_addons(data=GetUserAddonsRequest(phone=PHONE))
     print(resp)
 
     resp = app.addon.delete_user_addon(data=DeleteUserAddonRequest(id=user_addon_id))
     print(resp)
 
-    resp = app.addon.get_user_addons(data=GetUserAddonsRequest(phone="USER_PHONE_HERE"))
+    resp = app.addon.get_user_addons(data=GetUserAddonsRequest(phone=PHONE))
     print(resp)

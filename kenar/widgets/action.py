@@ -5,12 +5,7 @@ def get_action(link: str) -> Dict:
     return (
         {
             "action": {
-                "type": "LOAD_WEB_VIEW_PAGE",
-                "fallback_link": link,
-                "payload": {
-                    "@type": "type.googleapis.com/widgets.LoadWebViewPagePayload",
-                    "url": link,
-                },
+                "open_direct_link": link,
             }
         }
         if len(link) > 0
@@ -19,4 +14,4 @@ def get_action(link: str) -> Dict:
 
 
 def get_link_from_action(action: Dict) -> str:
-    return action["payload"]["url"]
+    return action.get("open_direct_link", "")
