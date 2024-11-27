@@ -158,7 +158,7 @@ class FinderService:
         return GetUserPostsResponse(**rsp.json())
 
 
-class EventService:
+class EventsService:
     def __init__(self, client: httpx.Client):
         self._client = client
 
@@ -533,7 +533,7 @@ class Client:
         )
         self._finder = FinderService(self._client)
         self._chat = ChatService(self._client)
-        self._events = EventService(self._client)
+        self._events = EventsService(self._client)
         self._addon = AddonService(self._client)
         self._asset = AssetService(self._client)
 
