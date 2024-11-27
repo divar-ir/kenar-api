@@ -1,7 +1,6 @@
 from enum import Enum
-from typing import Optional
-
 from pydantic import BaseModel
+from typing import Optional
 
 
 class BotButton(BaseModel):
@@ -17,16 +16,6 @@ class BotButton(BaseModel):
 
     data: ButtonData
     action: Action
-
-
-class SetNotifyChatPostConversationsRequest(BaseModel):
-    post_token: str
-    endpoint: str
-    identification_key: str
-
-
-class SetNotifyChatPostConversationsResponse(BaseModel):
-    pass
 
 
 class SendMessageV2Request(BaseModel):

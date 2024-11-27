@@ -30,10 +30,12 @@ from kenar.asset import (
     GetColorsResponse,
 )
 from kenar.chatmessage import (
-    SetNotifyChatPostConversationsRequest,
     SendMessageV2Request,
     SendMessageV2Response,
-    SetNotifyChatPostConversationsResponse,
+)
+from kenar.events import (
+    RegisterEventSubscriptionRequest,
+    RegisterEventSubscriptionResponse,
 )
 from kenar.finder import (
     SearchPostRequest,
@@ -63,24 +65,6 @@ class ClientConfig(BaseModel):
 class ChatService:
     def __init__(self, client: httpx.Client):
         self._client = client
-
-    def set_notify_chat_post_conversations(
-        self,
-        access_token: str,
-        data: SetNotifyChatPostConversationsRequest,
-        max_retry=3,
-        retry_delay=1,
-    ) -> SetNotifyChatPostConversationsResponse:
-        @retry(max_retries=max_retry, delay=retry_delay)
-        def send_request():
-            return self._client.post(
-                url="/v1/open-platform/notify/chat/post-conversations",
-                content=data.json(),
-                headers={ACCESS_TOKEN_HEADER_NAME: access_token},
-            )
-
-        send_request()
-        return SetNotifyChatPostConversationsResponse()
 
     def send_message(
         self,
@@ -172,6 +156,29 @@ class FinderService:
 
         rsp = send_request()
         return GetUserPostsResponse(**rsp.json())
+
+
+class EventService:
+    def __init__(self, client: httpx.Client):
+        self._client = client
+
+    def register_event_subscription(
+        self,
+        access_token: str,
+        data: RegisterEventSubscriptionRequest,
+        max_retry=3,
+        retry_delay=1,
+    ) -> RegisterEventSubscriptionResponse:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            return self._client.post(
+                url="/v1/open-platform/events/subscriptions",
+                content=data.json(),
+                headers={ACCESS_TOKEN_HEADER_NAME: access_token},
+            )
+
+        send_request()
+        return RegisterEventSubscriptionResponse()
 
 
 class AddonService:
@@ -526,12 +533,17 @@ class Client:
         )
         self._finder = FinderService(self._client)
         self._chat = ChatService(self._client)
+        self._events = EventService(self._client)
         self._addon = AddonService(self._client)
         self._asset = AssetService(self._client)
 
     @property
     def chat(self):
         return self._chat
+
+    @property
+    def events(self):
+        return self._events
 
     @chat.setter
     def chat(self, service: ChatService):
