@@ -29,7 +29,7 @@ class PostExtState(str, Enum):
 
 class GetPostResponse(BaseModel):
     state: PostExtState
-    first_published_at: str
+    first_published_at: str | None
     token: str
     category: str
     city: str
