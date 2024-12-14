@@ -22,6 +22,8 @@ class OauthResourceType(str, Enum):
 
     POST_ONGOING_IMAGES_GET = "POST_ONGOING_IMAGES_GET"
 
+    BUSINESS_ADDON_CREATE = "BUSINESS_ADDON_CREATE"
+
 
 class AccessTokenResponse(BaseModel):
     access_token: str
