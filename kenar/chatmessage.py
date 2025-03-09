@@ -45,11 +45,11 @@ class PostConversationsNotificationPayload(BaseModel):
 
 
 class ChatBotSendMessageRequest(BaseModel):
-    conversation_id: Optional[str]
-    user_id: Optional[str]
+    conversation_id: Optional[str] = None
+    user_id: Optional[str] = None
     text_message: str
-    media_token: Optional[str]
-    buttons: Optional[BotButton]
+    media_token: Optional[str] = None
+    buttons: Optional[BotButton] = None
 
 
 class ChatBotSendMessageResponse(BaseModel):
