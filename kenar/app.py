@@ -6,7 +6,6 @@ from typing import List, Optional, Literal
 import httpx
 from pydantic import BaseModel
 
-from kenar import ChatBotSendMessageRequest, ChatBotSendMessageResponse
 from kenar.addon import (
     CreateUserAddonRequest,
     CreateUserAddonResponse,
@@ -33,6 +32,8 @@ from kenar.asset import (
 from kenar.chatmessage import (
     SendMessageV2Request,
     SendMessageV2Response,
+    ChatBotSendMessageRequest,
+    ChatBotSendMessageResponse,
 )
 from kenar.events import (
     RegisterEventSubscriptionRequest,
