@@ -6,6 +6,7 @@ from typing import List, Optional, Literal
 import httpx
 from pydantic import BaseModel
 
+from kenar import ChatBotSendMessageRequest, ChatBotSendMessageResponse
 from kenar.addon import (
     CreateUserAddonRequest,
     CreateUserAddonResponse,
@@ -83,6 +84,28 @@ class ChatService:
 
         rsp = send_request()
         return SendMessageV2Response(**rsp.json())
+
+    def send_chatbot_message(
+        self,
+        data: ChatBotSendMessageRequest,
+        max_retry=3,
+        retry_delay=1,
+    ) -> SendMessageV2Response:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            if data.user_id:
+                return self._client.post(
+                    url=f"/experimental/open-platform/chat/bot/users/{data.user_id}/messages",
+                    content=data.json(),
+                )
+            else:
+                return self._client.post(
+                    url=f"/experimental/open-platform/chat/bot/conversations/{data.conversation_id}/messages",
+                    content=data.json(),
+                )
+
+        rsp = send_request()
+        return ChatBotSendMessageResponse(**rsp.json())
 
 
 class FinderService:

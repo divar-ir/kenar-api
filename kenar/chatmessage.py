@@ -42,3 +42,15 @@ class PostConversationsNotificationRegisterPayload(BaseModel):
 class PostConversationsNotificationPayload(BaseModel):
     registration_payload: PostConversationsNotificationRegisterPayload
     identification_key: str
+
+
+class ChatBotSendMessageRequest(BaseModel):
+    conversation_id: Optional[str]
+    user_id: Optional[str]
+    text_message: str
+    media_token: Optional[str]
+    buttons: Optional[BotButton]
+
+
+class ChatBotSendMessageResponse(BaseModel):
+    pass
