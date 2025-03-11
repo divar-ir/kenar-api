@@ -1,6 +1,10 @@
 from enum import Enum
-from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
+
+from pydantic import BaseModel, Field
+
+from kenar.icons import IconName
+from kenar.widgets.action import Action
 
 
 class BotButton(BaseModel):
@@ -44,12 +48,26 @@ class PostConversationsNotificationPayload(BaseModel):
     identification_key: str
 
 
+class ChatButton(BaseModel):
+    action: Action
+    caption: str
+    icon: IconName
+
+
+class ChatButtonRow(BaseModel):
+    buttons: List[ChatButton] = Field(default_factory=list)
+
+
+class ChatButtonGrid(BaseModel):
+    rows: List[ChatButtonRow] = Field(default_factory=list)
+
+
 class ChatBotSendMessageRequest(BaseModel):
     conversation_id: Optional[str] = None
     user_id: Optional[str] = None
     text_message: str
     media_token: Optional[str] = None
-    buttons: Optional[BotButton] = None
+    buttons: Optional[ChatButtonGrid] = None
 
 
 class ChatBotSendMessageResponse(BaseModel):
