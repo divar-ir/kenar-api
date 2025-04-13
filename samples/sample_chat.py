@@ -1,7 +1,7 @@
 from kenar import (
     SendMessageV2Request,
     BotButton,
-    SetNotifyChatPostConversationsRequest,
+    RegisterEventSubscriptionRequest,
 )
 from samples.sample_app import app
 
@@ -33,11 +33,10 @@ if __name__ == "__main__":
         access_token="ACCESS_TOKEN_HERE",
     )
 
-    app.chat.set_notify_chat_post_conversations(
-        data=SetNotifyChatPostConversationsRequest(
-            post_token="gZ6QmeWD",
-            endpoint="https://test2.com",
-            identification_key="thest-identification-key",
+    app.events.register_event_subscription(
+        data=RegisterEventSubscriptionRequest(
+            event_type=RegisterEventSubscriptionRequest.EventType.NEW_MESSAGE_ON_POST,
+            event_resource_id="gZ6QmeWD",
         ),
         access_token="ACCESS_TOKEN_HERE",
     )

@@ -30,10 +30,14 @@ from kenar.asset import (
     GetColorsResponse,
 )
 from kenar.chatmessage import (
-    SetNotifyChatPostConversationsRequest,
     SendMessageV2Request,
     SendMessageV2Response,
-    SetNotifyChatPostConversationsResponse,
+    ChatBotSendMessageRequest,
+    ChatBotSendMessageResponse,
+)
+from kenar.events import (
+    RegisterEventSubscriptionRequest,
+    RegisterEventSubscriptionResponse,
 )
 from kenar.finder import (
     SearchPostRequest,
@@ -64,24 +68,6 @@ class ChatService:
     def __init__(self, client: httpx.Client):
         self._client = client
 
-    def set_notify_chat_post_conversations(
-        self,
-        access_token: str,
-        data: SetNotifyChatPostConversationsRequest,
-        max_retry=3,
-        retry_delay=1,
-    ) -> SetNotifyChatPostConversationsResponse:
-        @retry(max_retries=max_retry, delay=retry_delay)
-        def send_request():
-            return self._client.post(
-                url="/v1/open-platform/notify/chat/post-conversations",
-                content=data.json(),
-                headers={ACCESS_TOKEN_HEADER_NAME: access_token},
-            )
-
-        send_request()
-        return SetNotifyChatPostConversationsResponse()
-
     def send_message(
         self,
         access_token: str,
@@ -99,6 +85,28 @@ class ChatService:
 
         rsp = send_request()
         return SendMessageV2Response(**rsp.json())
+
+    def send_chatbot_message(
+        self,
+        data: ChatBotSendMessageRequest,
+        max_retry=3,
+        retry_delay=1,
+    ) -> SendMessageV2Response:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            if data.user_id:
+                return self._client.post(
+                    url=f"/experimental/open-platform/chat/bot/users/{data.user_id}/messages",
+                    content=data.json(),
+                )
+            else:
+                return self._client.post(
+                    url=f"/experimental/open-platform/chat/bot/conversations/{data.conversation_id}/messages",
+                    content=data.json(),
+                )
+
+        rsp = send_request()
+        return ChatBotSendMessageResponse(**rsp.json())
 
 
 class FinderService:
@@ -172,6 +180,29 @@ class FinderService:
 
         rsp = send_request()
         return GetUserPostsResponse(**rsp.json())
+
+
+class EventsService:
+    def __init__(self, client: httpx.Client):
+        self._client = client
+
+    def register_event_subscription(
+        self,
+        access_token: str,
+        data: RegisterEventSubscriptionRequest,
+        max_retry=3,
+        retry_delay=1,
+    ) -> RegisterEventSubscriptionResponse:
+        @retry(max_retries=max_retry, delay=retry_delay)
+        def send_request():
+            return self._client.post(
+                url="/v1/open-platform/events/subscriptions",
+                content=data.json(),
+                headers={ACCESS_TOKEN_HEADER_NAME: access_token},
+            )
+
+        send_request()
+        return RegisterEventSubscriptionResponse()
 
 
 class AddonService:
@@ -526,12 +557,17 @@ class Client:
         )
         self._finder = FinderService(self._client)
         self._chat = ChatService(self._client)
+        self._events = EventsService(self._client)
         self._addon = AddonService(self._client)
         self._asset = AssetService(self._client)
 
     @property
     def chat(self):
         return self._chat
+
+    @property
+    def events(self):
+        return self._events
 
     @chat.setter
     def chat(self, service: ChatService):
