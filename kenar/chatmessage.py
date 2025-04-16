@@ -28,8 +28,8 @@ class SendMessageV2Request(BaseModel):
     post_token: str
     type: str = "TEXT"
     message: str
-    sender_btn: Optional[BotButton]
-    receiver_btn: Optional[BotButton]
+    sender_btn: Optional[BotButton] = None
+    receiver_btn: Optional[BotButton] = None
 
 
 class SendMessageV2Response(BaseModel):
